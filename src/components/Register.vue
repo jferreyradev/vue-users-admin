@@ -1,43 +1,22 @@
 <script setup>
 import { ref } from 'vue';
-import { usePersStore } from '../stores/persStore';
-import { usePersController } from '../composables/usePersController';
 import { useUserStore } from '@/stores/userStore';
 import { useUserController } from '@/composables/useUserController';
 
 // Instancia el store y el controlador
 const store = usePersStore();
 const user = useUserStore()
-const { fetchPers, clearPers, loading, error } = usePersController();
 
 const { fetchUser, clearUser} = useUserController()
 
 // Expone las propiedades del store y las funciones del controlador
-const dni = ref('')
+
 const pass = ref('')
 const mail = ref('')
 const pass2 = ref('')
 
 const snackbar = ref(false)
 const text = ref('')
-
-const registred = ref(false)
-
-async function verify() {
-  await fetchPers(dni.value)
-  if (!store.pers){
-    snackbar.value=true
-    text.value = 'No hay datos para el DNI ingresado'
-  }else{
-    await fetchUser(dni.value)
-    if(user.user){
-      console.log('Registrado')
-    }else{
-      console.log('NO Registrado')
-    }
-  }
-    
-}
 
 function login() {
   
@@ -75,10 +54,7 @@ const submit = () => submitBtn.value.click();
             <span class="headline">{{ store.pers.APELLIDO }} , {{ store.pers.NOMBRE }}</span>
           </v-card-title>
           <v-card-text>
-            <v-form ref="form" @submit.prevent="login" v-if="registred">
-              <v-text-field v-model="pass" label="Password" required></v-text-field>
-            </v-form>
-            <v-form ref="form" @submit.prevent="login" v-else>
+            <v-form ref="form" @submit.prevent="login" >
               <v-text-field type="email" v-model="mail" :rules="emailRules" label="email" required></v-text-field>
               <v-text-field type="password" v-model="pass" label="Password" required></v-text-field>
               <v-text-field type="password" v-model="pass2" label="Re Password" required></v-text-field>
@@ -87,27 +63,7 @@ const submit = () => submitBtn.value.click();
           <v-card-actions>
             <v-btn color="secondary" @click="clearPers">Volver</v-btn>
             <v-spacer></v-spacer>
-            <v-btn color="primary" @click="verify">Ingresar</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-col>
-    </v-row>
-    <v-row justify="center" v-else>
-      <v-col cols="6" md="6">
-        <v-card>
-          <v-card-title>
-            <span class="headline">Login</span>
-          </v-card-title>
-          <v-card-text>
-            <v-form ref="form" @submit.prevent="verify">
-              <v-text-field v-model="dni" :rules="rules" type="number" label="DNI" required></v-text-field>
-            </v-form>
-            <span v-if="loading">Verificando...</span>
-            <span v-else-if="error">Ocurrio un error en la verificación</span>
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="primary" @click="verify">Verificar</v-btn>
+            <v-btn color="primary" @click="">Ingresar</v-btn>
             <button ref="submitBtn" type="submit" class="d-none">Submit</button>
           </v-card-actions>
         </v-card>
