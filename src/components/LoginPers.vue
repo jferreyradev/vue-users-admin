@@ -4,6 +4,8 @@ import { usePersStore } from '../stores/persStore';
 import { usePersController } from '../composables/usePersController';
 import { useUserStore } from '@/stores/userStore';
 import { useUserController } from '@/composables/useUserController';
+import { Register } from '@/components/Register.vue'
+//import {Login} from '@/components/Login.vue'
 
 // Instancia el store y el controlador
 const store = usePersStore();
@@ -70,26 +72,8 @@ const submit = () => submitBtn.value.click();
   <v-container>
     <v-row justify="center" v-if="store.pers">
       <v-col cols="6" md="6">
-        <v-card>
-          <v-card-title>
-            <span class="headline">{{ store.pers.APELLIDO }} , {{ store.pers.NOMBRE }}</span>
-          </v-card-title>
-          <v-card-text>
-            <v-form ref="form" @submit.prevent="login" v-if="registred">
-              <v-text-field v-model="pass" label="Password" required></v-text-field>
-            </v-form>
-            <v-form ref="form" @submit.prevent="login" v-else>
-              <v-text-field type="email" v-model="mail" :rules="emailRules" label="email" required></v-text-field>
-              <v-text-field type="password" v-model="pass" label="Password" required></v-text-field>
-              <v-text-field type="password" v-model="pass2" label="Re Password" required></v-text-field>
-            </v-form>
-          </v-card-text>
-          <v-card-actions>
-            <v-btn color="secondary" @click="clearPers">Volver</v-btn>
-            <v-spacer></v-spacer>
-            <v-btn color="primary" @click="verify">Ingresar</v-btn>
-          </v-card-actions>
-        </v-card>
+        <Register v-if="registred" />
+        
       </v-col>
     </v-row>
     <v-row justify="center" v-else>

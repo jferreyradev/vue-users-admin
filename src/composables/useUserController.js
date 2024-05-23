@@ -28,6 +28,30 @@ export const useUserController = () => {
         }
     };
 
+    const register = async (body)=>{
+        loading.value = true;
+        error.value = null;
+        try {
+            const requestOptions = {
+                method: `POST`, // POST, etc
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({body})
+            }
+            const response = await fetch(`https://midliq-api-jr2sc3ef7gnx.deno.dev/api/sp/nuevoUsuario`,requestOptions);
+            if (!response.ok) {
+                throw new Error('Failed to fetch user data');
+            }
+            console.log(response)
+            const data = await response.json();
+            //userStore.setUser(data[0]);
+            console.log(userStore.user)
+        } catch (err) {
+            error.value = err;
+        } finally {
+            loading.value = false;
+        }
+    }
+
     const clearUser = () => {
         userStore.clearUser();
     };
@@ -38,5 +62,6 @@ export const useUserController = () => {
         error,
         fetchUser,
         clearUser,
+        register
     };
 };

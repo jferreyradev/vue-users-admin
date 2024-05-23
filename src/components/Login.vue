@@ -42,12 +42,6 @@ export default {
           <v-card-text>
             <v-form ref="form" v-model="valid">
               <v-text-field
-                v-model="email"
-                :rules="emailRules"
-                label="E-mail"
-                required
-              ></v-text-field>
-              <v-text-field
                 v-model="password"
                 :rules="passwordRules"
                 label="Password"
