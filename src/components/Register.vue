@@ -2,12 +2,15 @@
 import { ref } from 'vue';
 import { useUserStore } from '@/stores/userStore';
 import { useUserController } from '@/composables/useUserController';
+import { usePersStore } from '../stores/persStore';
+import { usePersController } from '@/composables/usePersController';
 
 // Instancia el store y el controlador
 const store = usePersStore();
 const user = useUserStore()
 
 const { fetchUser, clearUser, register } = useUserController()
+const { clearPers } = usePersController()
 
 // Expone las propiedades del store y las funciones del controlador
 
@@ -61,6 +64,7 @@ const submit = () => submitBtn.value.click();
             <v-col cols="6" md="6">
                 <v-card>
                     <v-card-title>
+                        <h3>Nuevo usuario</h3>
                         <span class="headline">{{ store.pers.APELLIDO }} , {{ store.pers.NOMBRE }}</span>
                     </v-card-title>
                     <v-card-text>
@@ -80,7 +84,9 @@ const submit = () => submitBtn.value.click();
                 </v-card>
             </v-col>
         </v-row>
-        <div>
+
+    </v-container>
+            <div>
             <v-snackbar v-model="snackbar">
                 {{ text }}
 
@@ -91,5 +97,4 @@ const submit = () => submitBtn.value.click();
                 </template>
             </v-snackbar>
         </div>
-    </v-container>
 </template>

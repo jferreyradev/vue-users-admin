@@ -4,26 +4,17 @@ import { usePersStore } from '../stores/persStore';
 import { usePersController } from '../composables/usePersController';
 import { useUserStore } from '@/stores/userStore';
 import { useUserController } from '@/composables/useUserController';
-import Register from '../components/Register.vue'
-import Login  from '@/components/Login.vue'
 
 // Instancia el store y el controlador
 const store = usePersStore();
 const user = useUserStore()
-const { fetchPers, clearPers, loading, error } = usePersController();
-
-const { fetchUser, clearUser} = useUserController()
+const { fetchPers, loading, error } = usePersController();
+const { fetchUser } = useUserController()
 
 // Expone las propiedades del store y las funciones del controlador
 const dni = ref('')
-const pass = ref('')
-const mail = ref('')
-const pass2 = ref('')
-
 const snackbar = ref(false)
 const text = ref('')
-
-const registred = ref(false)
 
 async function verify() {
   await fetchPers(dni.value)
@@ -41,28 +32,13 @@ async function verify() {
     
 }
 
-function login() {
-  null
-}
-
 const rules = [
   value => {
     if (value?.length > 6 && /[0-9]+/.test(value)) return true
     return 'El DNI debe tener al menos 7 digitos'
   },
 ]
-const emailRules= [
-        value => {
-          if (value) return true
 
-          return 'Debe ingresar su E-mail.'
-        },
-        value => {
-          if (/.+@.+\..+/.test(value)) return true
-
-          return 'El E-mail debe ser válido.'
-        },
-      ]
 const submitBtn = ref();
 const submit = () => submitBtn.value.click();
 
@@ -70,13 +46,7 @@ const submit = () => submitBtn.value.click();
 
 <template>
   <v-container>
-    <v-row justify="center" v-if="store.pers">
-      <v-col cols="6" md="6">
-        <Register v-if="!registred" />
-        
-      </v-col>
-    </v-row>
-    <v-row justify="center" v-else>
+    <v-row justify="center">
       <v-col cols="6" md="6">
         <v-card>
           <v-card-title>

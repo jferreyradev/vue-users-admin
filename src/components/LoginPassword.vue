@@ -4,29 +4,20 @@ import { usePersStore } from '../stores/persStore';
 import { usePersController } from '../composables/usePersController';
 import { useUserStore } from '@/stores/userStore';
 import { useUserController } from '@/composables/useUserController';
-import Register from '../components/Register.vue'
-import Login  from '@/components/Login.vue'
 
 // Instancia el store y el controlador
 const store = usePersStore();
 const user = useUserStore()
-const { fetchPers, clearPers, loading, error } = usePersController();
-
-const { fetchUser, clearUser} = useUserController()
+const { fetchPers, loading, error } = usePersController();
+const { fetchUser } = useUserController()
 
 // Expone las propiedades del store y las funciones del controlador
-const dni = ref('')
-const pass = ref('')
-const mail = ref('')
-const pass2 = ref('')
 
 const snackbar = ref(false)
 const text = ref('')
 
-const registred = ref(false)
-
 async function verify() {
-  await fetchPers(dni.value)
+  /*await fetchPers(dni.value)
   if (!store.pers){
     snackbar.value=true
     text.value = 'No hay datos para el DNI ingresado'
@@ -37,32 +28,16 @@ async function verify() {
     }else{
       console.log('NO Registrado')
     }
-  }
+  }*/
+  console.log('Aca hay que verificar el password')
     
 }
 
-function login() {
-  null
-}
-
-const rules = [
-  value => {
-    if (value?.length > 6 && /[0-9]+/.test(value)) return true
-    return 'El DNI debe tener al menos 7 digitos'
-  },
+const passwordRules = [
+  v => !!v || 'Password is required',
+  v => v.length >= 6 || 'Password must be at least 6 characters',
 ]
-const emailRules= [
-        value => {
-          if (value) return true
 
-          return 'Debe ingresar su E-mail.'
-        },
-        value => {
-          if (/.+@.+\..+/.test(value)) return true
-
-          return 'El E-mail debe ser válido.'
-        },
-      ]
 const submitBtn = ref();
 const submit = () => submitBtn.value.click();
 
@@ -70,21 +45,16 @@ const submit = () => submitBtn.value.click();
 
 <template>
   <v-container>
-    <v-row justify="center" v-if="store.pers">
-      <v-col cols="6" md="6">
-        <Register v-if="!registred" />
-        
-      </v-col>
-    </v-row>
-    <v-row justify="center" v-else>
+    <v-row justify="center">
       <v-col cols="6" md="6">
         <v-card>
           <v-card-title>
             <span class="headline">Login</span>
           </v-card-title>
           <v-card-text>
-            <v-form ref="form" @submit.prevent="verify">
-              <v-text-field v-model="dni" :rules="rules" type="number" label="DNI" required></v-text-field>
+            <v-form ref="form" v-model="valid">
+              <v-text-field v-model="password" :rules="passwordRules" label="Password" type="password"
+                required></v-text-field>
             </v-form>
             <span v-if="loading">Verificando...</span>
             <span v-else-if="error">Ocurrio un error en la verificación</span>

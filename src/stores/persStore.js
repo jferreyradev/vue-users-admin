@@ -6,10 +6,14 @@ export const usePersStore = defineStore('pers', () => {
   
   const setPers = (persData) => {
     pers.value = persData;
+    console.log('------')
+    console.log(pers.value)
+
   };
 
   const clearPers = () => {
     pers.value = null;
+
   };
 
   return {
