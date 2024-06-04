@@ -41,7 +41,7 @@ export const useUserController = () => {
             }
             //const response = await fetch(`https://midliq-api-jr2sc3ef7gnx.deno.dev/api/sp/nuevoUsuario`,requestOptions);
             //const response = await fetch(`http://www.serverburru2.duckdns.org:3005/api/sp/nuevoUsuario`,requestOptions);
-            const url_sp = 'https://midliq-api-we3b884fccey.deno.dev'
+            const url_sp = 'https://midliq-api-a4anetp2t24n.deno.dev'
             const response = await fetch(`${url_sp}/user`,requestOptions);
             if (!response.ok) {
                 throw new Error('Failed to fetch user data');
@@ -70,7 +70,7 @@ export const useUserController = () => {
             }
             //const response = await fetch(`https://midliq-api-jr2sc3ef7gnx.deno.dev/api/sp/nuevoUsuario`,requestOptions);
             //const response = await fetch(`http://www.serverburru2.duckdns.org:3005/api/sp/nuevoUsuario`,requestOptions);
-            const url_sp = 'https://midliq-api-we3b884fccey.deno.dev'
+            const url_sp = 'https://midliq-api-a4anetp2t24n.deno.dev'
             const response = await fetch(`${url_sp}/log`,requestOptions);
             if (!response.ok) {
                 throw new Error('Failed to fetch user data');

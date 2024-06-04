@@ -1,7 +1,6 @@
 // src/composables/useUserController.js
 import { ref } from 'vue';
 import { usePersStore } from '../stores/persStore';
-import {useUrls} from './useUrls';
 
 export const usePersController = () => {
     const persStore = usePersStore();

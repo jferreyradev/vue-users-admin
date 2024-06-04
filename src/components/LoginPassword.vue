@@ -16,6 +16,8 @@ const { fetchUser } = useUserController()
 const snackbar = ref(false)
 const text = ref('')
 
+const password = ref('')
+
 async function verify() {
   /*await fetchPers(dni.value)
   if (!store.pers){
@@ -52,7 +54,7 @@ const submit = () => submitBtn.value.click();
             <span class="headline">Login</span>
           </v-card-title>
           <v-card-text>
-            <v-form ref="form" v-model="valid">
+            <v-form ref="form" v-model="valid" @submit.prevent="verify" >
               <v-text-field v-model="password" :rules="passwordRules" label="Password" type="password"
                 required></v-text-field>
             </v-form>
