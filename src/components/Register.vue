@@ -23,15 +23,14 @@ const text = ref('')
 
 async function login() {
     const body = {
-        'DNI': store.pers.DNI,
-        'Usuario': '',
-        'Clave': pass,
-        'Mail': mail,
+        'DNI': store.pers.DOCUMENTO ,
+        'Usuario': store.pers.APELLIDO,
+        'Clave': pass.value,
+        'Mail': mail.value,
         'Estado': 1,
         'Rol': 1,
         'App': 1
     }
-    console.log(body)
     await register(body)
 }
 

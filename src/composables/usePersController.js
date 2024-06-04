@@ -1,19 +1,22 @@
 // src/composables/useUserController.js
 import { ref } from 'vue';
 import { usePersStore } from '../stores/persStore';
+import {useUrls} from './useUrls';
 
 export const usePersController = () => {
     const persStore = usePersStore();
     const loading = ref('')
     const error = ref('')
     const data = ref(null)
+    const url_api = 'https://midliq-api-7g0abd0mn8x4.deno.dev' //desa conc
+
+    //const {url_api} = useUrls()
 
     const fetchPers = async (userId) => {
         loading.value = true;
         error.value = null;
         try {
-            console.log(`https://midliq-api-jr2sc3ef7gnx.deno.dev/api/view/personaLista?Documento=${userId}`)
-            const response = await fetch(`https://midliq-api-jr2sc3ef7gnx.deno.dev/api/view/personaLista?Documento=${userId}`);
+            const response = await fetch(`${url_api}/api/view/personaLista?Documento=${userId}`);
             if (!response.ok) {
                 throw new Error('Failed to fetch user data');
             }

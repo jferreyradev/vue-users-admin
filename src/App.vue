@@ -1,6 +1,15 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
+import { useUrls } from './composables/useUrls';
+import { onMounted } from 'vue';
+
+const { setDesa } = useUrls()
+
+onMounted(() => {
+  setDesa()
+})
+
 </script>
 
 <template>
