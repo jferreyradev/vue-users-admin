@@ -7,9 +7,9 @@ import { useUserController } from '@/composables/useUserController';
 
 // Instancia el store y el controlador
 const store = usePersStore();
-const user = useUserStore()
+const { user } = useUserStore()
 const { fetchPers, loading, error } = usePersController();
-const { fetchUser } = useUserController()
+const { fetchUser } = useUserController();
 
 // Expone las propiedades del store y las funciones del controlador
 const dni = ref('')
@@ -23,7 +23,7 @@ async function verify() {
     text.value = 'No hay datos para el DNI ingresado'
   }else{
     await fetchUser(dni.value)
-    if(user.user){
+    if(user){
       console.log('Registrado')
     }else{
       console.log('NO Registrado')

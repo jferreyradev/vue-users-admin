@@ -42,17 +42,16 @@ export const useUserController = () => {
             //const response = await fetch(`https://midliq-api-jr2sc3ef7gnx.deno.dev/api/sp/nuevoUsuario`,requestOptions);
             //const response = await fetch(`http://www.serverburru2.duckdns.org:3005/api/sp/nuevoUsuario`,requestOptions);
             const url_sp = 'https://midliq-api-a4anetp2t24n.deno.dev'
-            const response = await fetch(`${url_sp}/user`,requestOptions);
-            if (!response.ok) {
-                throw new Error('Failed to fetch user data');
-            }
-            console.log(response)
-            data.value = await response.json();
+            await fetch(`${url_sp}/user`,requestOptions);
+            //console.log(response)
+            //data.value = await response.json();
             //userStore.setUser(data[0]);
-            console.log(userStore.user)
-            console.log(data.value)
+            //console.log(userStore.user)
+            //console.log(data.value)
+            data.value = {status:'OK'}
         } catch (err) {
             error.value = err;
+            console.log(err)
         } finally {
             loading.value = false;
         }

@@ -1,15 +1,18 @@
 <script setup>
 import { ref } from 'vue';
-import { useUserStore } from '@/stores/userStore';
+//import { useUserStore } from '@/stores/userStore';
 import { useUserController } from '@/composables/useUserController';
 import { usePersStore } from '../stores/persStore';
 import { usePersController } from '@/composables/usePersController';
 
+import { useRoute } from 'vue-router'
+
 // Instancia el store y el controlador
 const store = usePersStore();
-const user = useUserStore()
+//const user = useUserStore()
 
-const { fetchUser, clearUser, register } = useUserController()
+const { data, loading, error, fetchUser, clearUser, register } = useUserController()
+
 const { clearPers } = usePersController()
 
 // Expone las propiedades del store y las funciones del controlador
@@ -31,7 +34,13 @@ async function login() {
         'Rol': 1,
         'App': 1
     }
-    await register(body)
+
+    try {
+        await register(body)
+        useRoute().push('boletas')
+    } catch (error) {
+
+    }    
 }
 
 const rules = [
@@ -73,6 +82,8 @@ const submit = () => submitBtn.value.click();
                             <v-text-field type="password" v-model="pass" label="Password" required></v-text-field>
                             <v-text-field type="password" v-model="pass2" label="Re Password" required></v-text-field>
                         </v-form>
+                        <span v-if="loading">Registrando...</span>
+                        <span v-else-if="error">Ocurrio un error en la verificación</span>
                     </v-card-text>
                     <v-card-actions>
                         <v-btn color="secondary" @click="clearPers">Volver</v-btn>

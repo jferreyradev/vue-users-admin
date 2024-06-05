@@ -4,10 +4,13 @@ import { usePersStore } from '../stores/persStore';
 import { usePersController } from '../composables/usePersController';
 import { useUserStore } from '@/stores/userStore';
 import { useUserController } from '@/composables/useUserController';
+import { useRouter } from 'vue-router'
+const router = useRouter()
+
 
 // Instancia el store y el controlador
 const store = usePersStore();
-const user = useUserStore()
+const { user } = useUserStore()
 const { fetchPers, loading, error } = usePersController();
 const { fetchUser } = useUserController()
 
@@ -31,7 +34,14 @@ async function verify() {
       console.log('NO Registrado')
     }
   }*/
+  console.log(user.ID)
+  console.log(user.PASSWORD)
+  console.log(password.value)
   console.log('Aca hay que verificar el password')
+
+  if (user.PASSWORD === password.value) {
+    router.push('boletas')
+  }
     
 }
 

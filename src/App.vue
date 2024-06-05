@@ -1,8 +1,8 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
 import { useUrls } from './composables/useUrls';
 import { onMounted } from 'vue';
+import LoginView from './views/LoginView.vue';
 
 const { setDesa } = useUrls()
 
@@ -14,7 +14,7 @@ onMounted(() => {
 
 <template>
   <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
+    <!-- <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
 
     <div class="wrapper">
       <HelloWorld msg="You did it!" />
@@ -24,10 +24,12 @@ onMounted(() => {
         <RouterLink to="/test">Test</RouterLink>
         <RouterLink to="/about">About</RouterLink>
       </nav>
-    </div>
+    </div> 
+    -->
   </header>
 
   <RouterView />
+
 </template>
 
 <style scoped>

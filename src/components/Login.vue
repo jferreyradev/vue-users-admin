@@ -22,10 +22,7 @@ onMounted(()=>{
   console.log(storePers.pers)
 })
 
-
 </script>
-
-
 
 <template>
 <!--   <div>
