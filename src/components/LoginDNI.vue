@@ -50,7 +50,7 @@ const submit = () => submitBtn.value.click();
       <v-col cols="6" md="6">
         <v-card>
           <v-card-title>
-            <span class="headline">Login</span>
+            <span class="headline">Ingresar</span>
           </v-card-title>
           <v-card-text>
             <v-form ref="form" @submit.prevent="verify">
