@@ -1,45 +1,49 @@
 <script setup>
-import { useUserStore } from '@/stores/userStore';
-import { usePersStore } from '@/stores/persStore';
-import { useUserController } from '@/composables/useUserController';
-import Register from './Register.vue';
-import LoginPassword from './LoginPassword.vue';
+import Register from './Register.vue'
+import LoginPassword from './LoginPassword.vue'
 import LoginDNI from './LoginDNI.vue'
-import { onMounted } from 'vue';
+import LiqBoletas from './LiqBoletas.vue'
 
-// Instancia el store y el controlador
-const storePers = usePersStore();
-const storeUser = useUserStore()
+import { usePersController } from '../composables/usePersController'
+import { useUserController } from '@/composables/useUserController'
 
+const { verify } = usePersController()
+const { logged, registred } = useUserController()
+
+//const persStore = usePersStore()
+
+//const { auth, user } = useUserStore()
 
 function login() {
   /*if (this.$refs.form.validate()) {
     this.$router.push('/dashboard');
   }*/
 }
-
-onMounted(()=>{
-  console.log(storePers.pers)
-})
-
 </script>
 
 <template>
-<!--   <div>
-    <h1>data</h1>
-    <span>{{ storePers.pers }}</span>
-    <span>{{ storeUser.user }}</span>
-  </div> -->
+  <v-container fluid>
+    <v-row>
+      <LoginDNI v-if="!verify" />
+      <Register v-else-if="!registred" />
+      <LoginPassword v-else />
+    </v-row>
+    <v-row>
+      <LiqBoletas v-if="logged" />
+    </v-row>
+  </v-container>
 
-<div v-if="storePers.pers && !storeUser.user">
-    <Register />
-</div>
-<div v-else-if="storePers.pers && storeUser.user">
-    <LoginPassword></LoginPassword>
-</div>
-<div v-else>
-  <LoginDNI v-if="!storePers.pers" ></LoginDNI>
-</div>
+  <!-- <v-container fluid>
+        <v-row v-if="pers && !storeUser.user">
+          <Register />
+        </v-row>
+        <v-row v-else-if="pers && storeUser.user">
+          <LoginPassword />
+        </v-row>
+        <v-row v-else>
+          <LoginDNI />
+        </v-row>
+      </v-container> -->
 </template>
 
 <style scoped>

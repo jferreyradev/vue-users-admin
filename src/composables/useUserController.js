@@ -6,7 +6,12 @@ export const useUserController = () => {
     const userStore = useUserStore();
     const loading = ref('')
     const error = ref('')
-    const data = ref(null)
+    const data = ref(null)    
+    const logged = ref(false)
+    const registred = ref(false)
+
+    const setLogged = (v) => {logged.value=v}
+    const setRegistred = (v) => {registred.value=v}
 
     const fetchUser = async (userId) => {
         loading.value = true;
@@ -21,8 +26,10 @@ export const useUserController = () => {
             const data = await response.json();
             userStore.setUser(data[0]);
             console.log(userStore.user)
+            register.value = true
         } catch (err) {
             error.value = err;
+            register.value = false
         } finally {
             loading.value = false;
         }
@@ -49,6 +56,7 @@ export const useUserController = () => {
             //console.log(userStore.user)
             //console.log(data.value)
             data.value = {status:'OK'}
+            logged.value = true
         } catch (err) {
             error.value = err;
             console.log(err)
@@ -96,6 +104,7 @@ export const useUserController = () => {
         fetchUser,
         clearUser,
         register,
-        log
+        log, logged, setLogged,
+        registred, setRegistred
     };
 };

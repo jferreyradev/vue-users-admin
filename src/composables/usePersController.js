@@ -7,6 +7,8 @@ export const usePersController = () => {
     const loading = ref('')
     const error = ref('')
     const data = ref(null)
+    const verify = ref(false)
+
     const url_api = 'https://midliq-api-7g0abd0mn8x4.deno.dev' //desa conc
 
     //const {url_api} = useUrls()
@@ -23,8 +25,10 @@ export const usePersController = () => {
             const data = await response.json();
             console.log(data)
             persStore.setPers(data[0]);
+            verify.value=true
         } catch (err) {
             error.value = err;
+            verify.value=false
         } finally {
             loading.value = false;
         }
@@ -34,11 +38,17 @@ export const usePersController = () => {
         persStore.clearPers();
     };
 
+    const setVerify = (v) => {
+        verify.value = v
+    };
+
     return {
         data,
         loading,
         error,
         fetchPers,
         clearPers,
+        verify,
+        setVerify
     };
 };

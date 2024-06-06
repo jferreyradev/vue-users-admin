@@ -11,8 +11,8 @@ const router = useRouter()
 // Instancia el store y el controlador
 const store = usePersStore();
 const { user } = useUserStore()
-const { fetchPers, loading, error } = usePersController();
-const { fetchUser } = useUserController()
+const { fetchPers, loading, error, clearPers, verify } = usePersController();
+const { fetchUser, auth, setAuth } = useUserController()
 
 // Expone las propiedades del store y las funciones del controlador
 
@@ -21,7 +21,7 @@ const text = ref('')
 
 const password = ref('')
 
-async function verify() {
+function fnverify() {
   /*await fetchPers(dni.value)
   if (!store.pers){
     snackbar.value=true
@@ -40,7 +40,8 @@ async function verify() {
   console.log('Aca hay que verificar el password')
 
   if (user.PASSWORD === password.value) {
-    router.push('boletas')
+    setAuth(true)
+    //router.push('boletas')
   }
     
 }
@@ -72,8 +73,9 @@ const submit = () => submitBtn.value.click();
             <span v-else-if="error">Ocurrio un error en la verificación</span>
           </v-card-text>
           <v-card-actions>
+            <v-btn color="secondary" @click="clearPers">Volver</v-btn>
             <v-spacer></v-spacer>
-            <v-btn color="primary" @click="verify">Verificar</v-btn>
+            <v-btn color="primary" @click="fnverify">Verificar</v-btn>
             <button ref="submitBtn" type="submit" class="d-none">Submit</button>
           </v-card-actions>
         </v-card>

@@ -8,28 +8,33 @@ import { useUserController } from '@/composables/useUserController';
 // Instancia el store y el controlador
 const store = usePersStore();
 const { user } = useUserStore()
-const { fetchPers, loading, error } = usePersController();
-const { fetchUser } = useUserController();
+const { fetchPers, loading, error, verify } = usePersController();
+const { fetchUser, setRegistred, registred } = useUserController();
 
 // Expone las propiedades del store y las funciones del controlador
 const dni = ref('')
 const snackbar = ref(false)
 const text = ref('')
 
-async function verify() {
+async function fnverify() {
+
   await fetchPers(dni.value)
-  if (!store.pers){
+  console.log(store.pers)
+  
+  if (!verify){
     snackbar.value=true
     text.value = 'No hay datos para el DNI ingresado'
   }else{
     await fetchUser(dni.value)
-    if(user){
+
+    if(registred){
       console.log('Registrado')
+      setRegistred(true)
     }else{
       console.log('NO Registrado')
+      setRegistred(false)
     }
-  }
-    
+  }  
 }
 
 const rules = [
@@ -53,7 +58,7 @@ const submit = () => submitBtn.value.click();
             <span class="headline">Ingresar</span>
           </v-card-title>
           <v-card-text>
-            <v-form ref="form" @submit.prevent="verify">
+            <v-form ref="form" @submit.prevent="fnverify">
               <v-text-field v-model="dni" :rules="rules" type="number" label="DNI" required></v-text-field>
             </v-form>
             <span v-if="loading">Verificando...</span>
@@ -61,7 +66,7 @@ const submit = () => submitBtn.value.click();
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="primary" @click="verify">Verificar</v-btn>
+            <v-btn color="primary" @click="fnverify">Verificar</v-btn>
             <button ref="submitBtn" type="submit" class="d-none">Submit</button>
           </v-card-actions>
         </v-card>
