@@ -65,7 +65,7 @@ const submit = () => submitBtn.value.click();
             <span class="headline">Login</span>
           </v-card-title>
           <v-card-text>
-            <v-form ref="form" v-model="valid" @submit.prevent="verify" >
+            <v-form ref="form" @submit.prevent="verify" >
               <v-text-field v-model="password" :rules="passwordRules" label="Password" type="password"
                 required></v-text-field>
             </v-form>

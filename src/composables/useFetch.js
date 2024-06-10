@@ -14,7 +14,7 @@ export function useFetch() {
             if (body) {
                 requestOptions = {
                     method: `${type}`, // POST, etc
-                    mode:'cors',
+                    mode:'no-cors',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(body)
                 }
