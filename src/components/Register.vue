@@ -1,19 +1,22 @@
 <script setup>
 import { ref } from 'vue';
-//import { useUserStore } from '@/stores/userStore';
-import { useUserController } from '@/composables/useUserController';
-import { usePersStore } from '../stores/persStore';
-import { usePersController } from '@/composables/usePersController';
-
+import { useUser } from '@/composables/useUser'
 import { useRoute } from 'vue-router'
 
-// Instancia el store y el controlador
-const store = usePersStore();
-//const user = useUserStore()
-
-const { data, loading, error, fetchUser, clearUser, register } = useUserController()
-
-const { clearPers } = usePersController()
+const {
+  perso,
+  user,
+  loading,
+  error,
+  success,
+  fetchPers,
+  fetchUser,
+  isAuthenticated,
+  isValid,
+  isRegistred,
+  clearPers,
+  clearUser, register
+} = useUser()
 
 // Expone las propiedades del store y las funciones del controlador
 
@@ -26,8 +29,8 @@ const text = ref('')
 
 async function login() {
     const body = {
-        'DNI': store.pers.DOCUMENTO ,
-        'Usuario': store.pers.APELLIDO,
+        'DNI': perso.DOCUMENTO ,
+        'Usuario': perso.APELLIDO,
         'Clave': pass.value,
         'Mail': mail.value,
         'Estado': 1,
@@ -37,9 +40,9 @@ async function login() {
 
     try {
         await register(body)
-        useRoute().push('boletas')
+        useRoute().push('/')
     } catch (error) {
-
+        console.log(error)
     }    
 }
 
@@ -68,12 +71,12 @@ const submit = () => submitBtn.value.click();
 
 <template>
     <v-container>
-        <v-row justify="center" v-if="store.pers">
+        <v-row justify="center" v-if="perso">
             <v-col cols="6" md="6">
                 <v-card>
                     <v-card-title>
                         <h3>Nuevo usuario</h3>
-                        <span class="headline">{{ store.pers.APELLIDO }} , {{ store.pers.NOMBRE }}</span>
+                        <span class="headline">{{ perso.APELLIDO }} , {{ perso.NOMBRE }}</span>
                     </v-card-title>
                     <v-card-text>
                         <v-form ref="form" @submit.prevent="login">

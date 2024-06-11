@@ -1,54 +1,77 @@
 // composables/useUser.js o composables/useUser.ts
-import { computed, watch } from 'vue';
-import { useUserStore } from '../stores/userStore';
+import { computed, watch } from 'vue'
+import { useUserStore } from '../stores/userStore'
 
 export function useUser() {
-  const userStore = useUserStore();
+  const userStore = useUserStore()
 
-  const pers = computed(()=> userStore.pers );
-  const isValid = computed(() => userStore.isValid);
+  const perso = computed(() => userStore.perso)
+  const user = computed(() => userStore.user)
 
-  const user = computed(() => userStore.user);
-  const isAuthenticated = computed(() => userStore.isAuthenticated);
-  const userName = computed(() => userStore.userName);
-  const loading = computed(() => userStore.loading);
-  const error = computed(() => userStore.error);
-  const success = computed(() => userStore.success);
+  const isValid = computed(() => userStore.isValid)
+  const isAuthenticated = computed(() => userStore.isAuthenticated)
+  const isRegistred = computed(() => userStore.isRegistred)
+
+  const userName = computed(() => userStore.userName)
+  const loading = computed(() => userStore.loading)
+  const error = computed(() => userStore.error)
+  const success = computed(() => userStore.success)
 
   // Observa cambios en el estado del usuario
   watch(user, (newValue) => {
-    console.log('El usuario ha cambiado:', newValue);
-  });
+    console.log('El usuario ha cambiado:', newValue)
+  })
 
   const setUser = (user) => {
-    userStore.setUser(user);
-  };
+    userStore.setUser(user)
+  }
+
+  const setPers = (pers) => {
+    userStore.setPers(pers)
+  }
 
   const clearUser = () => {
-    userStore.clearUser();
-  };
+    userStore.clearUser()
+  }
+
+  const clearPers = () => {
+    userStore.clearPers()
+  }
 
   const fetchUser = async (v) => {
-    await userStore.fetchUser(v);
-  };
+    await userStore.fetchUser(v)
+  }
 
   const fetchPers = async (v) => {
-    console.log('fetch ', v)
-    await userStore.fetchPers(v);
-  };
+    await userStore.fetchPers(v)
+  }
+
+  const reset = () => {
+    userStore.clearUser()
+    userStore.clearPers()
+  }
+
+  const register = async (b) => {
+    userStore.register(b)
+  }
 
   return {
-    pers,
-    isValid,
+    perso,
     user,
+    isValid,
     isAuthenticated,
+    isRegistred,
     userName,
     loading,
     error,
     success,
     setUser,
+    setPers,
     clearUser,
+    clearPers,
     fetchUser,
-    fetchPers
-  };
+    fetchPers,
+    reset,
+    register
+  }
 }

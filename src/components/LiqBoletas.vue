@@ -1,7 +1,8 @@
 <script setup>
 //import { useFilterStore } from '@/stores/filterStore.js'
 //import { useFetch } from '@/composables/useFetch.js'
-import { usePersStore } from '@/stores/persStore'
+import { useUser } from '@/composables/useUser.js'
+
 import { onMounted, ref } from 'vue';
 //import { useStatefulComposable } from '@/composables/stateful.js'
 //import { defineProps } from 'vue'
@@ -10,9 +11,10 @@ import { onMounted, ref } from 'vue';
 
 //const props = defineProps(['dni'])
 
-const URL_API = 'https://midliq-api-7g0abd0mn8x4.deno.dev/api'
 
-const { pers } = usePersStore()
+const { perso, user } =  useUser()
+
+const URL_API = 'https://midliq-api-7g0abd0mn8x4.deno.dev/api'
 
 const data = ref('')
 const isPending = ref('')
@@ -20,7 +22,7 @@ const error = ref('')
 
 function getData() {
 
-    fetch(`${URL_API}/view/boletas?Documento=${pers.DOCUMENTO}`)
+    fetch(`${URL_API}/view/boletas?Documento=${user.value?.DNI}`)
       .then((res) => res.json())
       .then((_data) => {
         data.value = _data
@@ -42,6 +44,8 @@ const getVto = (vto) => {
 }
 
 onMounted(()=>{
+  console.log(perso)
+  console.log(user.value.DNI)
     getData()
 })
 

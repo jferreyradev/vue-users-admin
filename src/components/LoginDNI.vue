@@ -1,87 +1,82 @@
 <script setup>
-import { useUser } from '@/composables/useUser';
-import { ref } from 'vue';
-import LoginPassword from './LoginPassword.vue';
-
-/*
-import { usePersStore } from '../stores/persStore';
-import { usePersController } from '../composables/usePersController';
-import { useUserStore } from '@/stores/userStore';
-import { useUserController } from '@/composables/useUserController';
-*/
-
-// Instancia el store y el controlador
-//const store = usePersStore();
-//const { user } = useUserStore()
-//const { fetchPers, loading, error, verify } = usePersController();
-//const { fetchUser, setRegistred, registred } = useUserController();
+import { useUser } from '@/composables/useUser'
+import { ref } from 'vue'
+import DialogSimple from './DialogSimple.vue'
+import { useRouter } from 'vue-router'
+const router = useRouter()
 
 const {
-    pers,
-    user,
-    loading,
-    error,
-    success,
-    fetchPers, fetchUser, isAuthenticated, isValid
-  } = useUser()
+  perso,
+  user,
+  loading,
+  error,
+  success,
+  fetchPers,
+  fetchUser,
+  isAuthenticated,
+  isValid,
+  isRegistred,
+  clearPers,
+  clearUser
+} = useUser()
 
 // Expone las propiedades del store y las funciones del controlador
 const dni = ref('')
 const snackbar = ref(false)
-const text = ref('')
 
+const text = ref('')
+const showDialog = ref(false)
+
+const showMessage = ref(false)
 const password = ref('')
 
-const showPasswordLogin = ref(false)
+function fnreset() {
+  clearPers()
+  clearUser()
+  showMessage.value = false
+  dni.value = ''
+}
 
 async function fnverify() {
-
   console.log('Verificando ', dni.value)
+
+  showMessage.value = true
 
   await fetchPers(dni.value)
   await fetchUser(dni.value)
 
-  console.log(isValid.value, isAuthenticated.value)
-  
-  if (isValid.value && isAuthenticated.value) 
-    showPasswordLogin.value = true
-  else 
-    showPasswordLogin=false
-  
-  if (!success){
-    snackbar.value=true
-    text.value = 'No hay datos para el DNI ingresado'
-  }else{
-    text.value = 'El DNI ingresado esta verificado'
-    /*
-    await fetchUser(dni.value)
+  console.log(isValid.value, isRegistred.value)
 
-    if(registred){
-      console.log('Registrado')
-      setRegistred(true)
-    }else{
-      console.log('NO Registrado')
-      setRegistred(false)
-    }
-      */
-  }  
+  console.log(perso.value)
+  console.log(user.value)
+}
+
+function fnlogin() {
+  console.log(user.value?.PASSWORD)
+  if (user.value?.PASSWORD === password.value) {
+    console.log('A boletas')
+    router.push('boletas')
+  }
+}
+
+function handleRegister() {
+  router.push('register')
 }
 
 const rules = [
-  value => {
+  (value) => {
     if (value?.length > 6 && /[0-9]+/.test(value)) return true
     return 'El DNI debe tener al menos 7 digitos'
-  },
+  }
 ]
 
 const passwordRules = [
-  v => !!v || 'Password is required',
-  v => v.length >= 6 || 'Password must be at least 6 characters',
+  (v) => !!v || 'Password is required',
+  (v) => v.length >= 6 || 'Password must be at least 6 characters'
 ]
 
-const submitBtn = ref();
-const submit = () => submitBtn.value.click();
-
+const submitBtn = ref()
+const submit = () => submitBtn.value.click()
 </script>
 
 <template>
@@ -94,41 +89,67 @@ const submit = () => submitBtn.value.click();
           </v-card-title>
           <v-card-text>
             <v-form ref="form" @submit.prevent="fnverify">
-              <v-text-field v-model="dni" :rules="rules" type="number" label="DNI" required></v-text-field>
-              <v-text-field disabled="true" v-model="password" :rules="passwordRules" label="Password" type="password"
-                required></v-text-field>
+              <v-text-field
+                v-model="dni"
+                :rules="rules"
+                type="number"
+                label="DNI"
+                required
+              ></v-text-field>
             </v-form>
             <span v-if="loading">Verificando...</span>
-            <span v-else-if="error">Ocurrio un error en la verificación</span>            
+            <!-- <span v-else-if="error">Ocurrio un error en la verificación</span> -->
+
+            <div>
+              <div class="mt-5">
+                <span v-if="isValid"> El DNI corresponde a un empleado del municipio. </span>
+                <span v-else> El DNI NO corresponde a un empleado del municipio. </span>
+              </div>
+
+              <div class="mt-5" v-if="showMessage && isValid">
+                <div v-if="isRegistred">
+                  <span>El DNI está registrado como usuario.</span>
+
+                  <v-text-field
+                    class="mt-5"
+                    v-model="password"
+                    :rules="passwordRules"
+                    label="Password"
+                    type="password"
+                    required
+                  ></v-text-field>
+                </div>
+
+                <div v-else>
+                  <span>No se encuentra registrado como usuario. ¿Desea hacerlo? </span>
+                  <div class="d-flex justify-space-evenly mt-5">
+                    <v-btn color="primary" @click = "handleRegister" >Si</v-btn>
+                    <v-btn @click="fnreset" color="primary">No</v-btn>
+                  </div>
+                </div>
+              </div>
+            </div>
           </v-card-text>
           <v-card-actions>
+            <v-btn color="primary" @click="fnreset">Cancelar</v-btn>
             <v-spacer></v-spacer>
-            <v-btn color="primary" @click="fnverify">Verificar</v-btn>
+            <v-btn v-if="!isValid" color="primary" @click="fnverify">Verificar</v-btn>
             <button ref="submitBtn" type="submit" class="d-none">Submit</button>
+
+            <v-btn v-if="isValid" color="primary" @click="fnlogin">Ingresar</v-btn>
           </v-card-actions>
         </v-card>
       </v-col>
-    </v-row>      
+    </v-row>
+  </v-container>
 
-    <div>
-      <v-snackbar
-      v-model="snackbar"
-    >
+  <div>
+    <v-snackbar v-model="snackbar">
       {{ text }}
 
       <template v-slot:actions>
-        <v-btn
-          color="pink"
-          variant="text"
-          @click="snackbar = false"
-        >
-          Cerrar
-        </v-btn>
+        <v-btn color="pink" variant="text" @click="snackbar = false"> Cerrar </v-btn>
       </template>
     </v-snackbar>
-    </div>
-  </v-container>
-  <div>
-      <LoginPassword v-if="showPasswordLogin" />
-    </div> 
+  </div>
 </template>
