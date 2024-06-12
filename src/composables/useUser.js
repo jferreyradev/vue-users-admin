@@ -5,7 +5,7 @@ import { useUserStore } from '../stores/userStore'
 export function useUser() {
   const userStore = useUserStore()
 
-  const perso = computed(() => userStore.perso)
+  const pers = computed(() => userStore.pers)
   const user = computed(() => userStore.user)
 
   const isValid = computed(() => userStore.isValid)
@@ -47,6 +47,7 @@ export function useUser() {
   }
 
   const reset = () => {
+    console.log('reset desde composable')
     userStore.clearUser()
     userStore.clearPers()
   }
@@ -56,7 +57,7 @@ export function useUser() {
   }
 
   return {
-    perso,
+    pers,
     user,
     isValid,
     isAuthenticated,

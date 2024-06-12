@@ -1,10 +1,12 @@
 <script setup>
 import { ref } from 'vue';
 import { useUser } from '@/composables/useUser'
-import { useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 const {
-  perso,
+  pers,
   user,
   loading,
   error,
@@ -15,7 +17,7 @@ const {
   isValid,
   isRegistred,
   clearPers,
-  clearUser, register
+  clearUser, reset, register
 } = useUser()
 
 // Expone las propiedades del store y las funciones del controlador
@@ -29,8 +31,8 @@ const text = ref('')
 
 async function login() {
     const body = {
-        'DNI': perso.DOCUMENTO ,
-        'Usuario': perso.APELLIDO,
+        'DNI': pers.value.DOCUMENTO ,
+        'Usuario': pers.value.APELLIDO,
         'Clave': pass.value,
         'Mail': mail.value,
         'Estado': 1,
@@ -40,7 +42,7 @@ async function login() {
 
     try {
         await register(body)
-        useRoute().push('/')
+        router.push('/')
     } catch (error) {
         console.log(error)
     }    
@@ -67,16 +69,22 @@ const emailRules = [
 const submitBtn = ref();
 const submit = () => submitBtn.value.click();
 
+function handleBack() {
+    console.log('back')
+    reset
+    router.push('/')
+}
+
 </script>
 
 <template>
     <v-container>
-        <v-row justify="center" v-if="perso">
+        <v-row justify="center" v-if="pers">
             <v-col cols="6" md="6">
                 <v-card>
                     <v-card-title>
                         <h3>Nuevo usuario</h3>
-                        <span class="headline">{{ perso.APELLIDO }} , {{ perso.NOMBRE }}</span>
+                        <span class="headline">{{ pers.APELLIDO }} , {{ pers.NOMBRE }}</span>
                     </v-card-title>
                     <v-card-text>
                         <v-form ref="form" @submit.prevent="login">
@@ -89,7 +97,7 @@ const submit = () => submitBtn.value.click();
                         <span v-else-if="error">Ocurrio un error en la verificación</span>
                     </v-card-text>
                     <v-card-actions>
-                        <v-btn color="secondary" @click="clearPers">Volver</v-btn>
+                        <v-btn color="secondary" @click="handleBack">Volver</v-btn>
                         <v-spacer></v-spacer>
                         <v-btn color="primary" @click="login">Registrar e ingresar</v-btn>
                         <button ref="submitBtn" type="submit" class="d-none">Submit</button>

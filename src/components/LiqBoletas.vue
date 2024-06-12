@@ -12,7 +12,7 @@ import { onMounted, ref } from 'vue';
 //const props = defineProps(['dni'])
 
 
-const { perso, user } =  useUser()
+const { pers, user } =  useUser()
 
 const URL_API = 'https://midliq-api-7g0abd0mn8x4.deno.dev/api'
 
@@ -44,8 +44,7 @@ const getVto = (vto) => {
 }
 
 onMounted(()=>{
-  console.log(perso)
-  console.log(user.value.DNI)
+  if (pers && user.value.DNI)
     getData()
 })
 
@@ -67,14 +66,14 @@ function handleConforme(item) {
     <v-row v-if="isPending" class="mb-5">
       <span>loading...</span>
     </v-row>
-    <v-row v-else-if="data" class="d-flex flex-column mb-6">
+    <v-row v-else-if="pers && data" class="d-flex flex-column mb-6">
       <p>DNI: {{ data[0].DOCUMENTO }}</p>
       <p>Apellido y nombre: {{ pers.APELLIDO }} {{ pers.NOMBRE }}</p>
       <span>
         Rep: {{ data[0].REPARTICIONID }} Orden: {{ data[0].ORDEN }} Afiliado:{{ data[0].AFILIADO }}
       </span>
     </v-row>
-    <v-row v-if="data">
+    <v-row v-if="pers && data">
       <v-table :height="300" :fixed-header="true" :hover="true">
         <thead>
           <tr>

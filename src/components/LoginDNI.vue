@@ -1,12 +1,11 @@
 <script setup>
 import { useUser } from '@/composables/useUser'
 import { ref } from 'vue'
-import DialogSimple from './DialogSimple.vue'
 import { useRouter } from 'vue-router'
 const router = useRouter()
 
 const {
-  perso,
+  pers,
   user,
   loading,
   error,
@@ -16,8 +15,7 @@ const {
   isAuthenticated,
   isValid,
   isRegistred,
-  clearPers,
-  clearUser
+  reset
 } = useUser()
 
 // Expone las propiedades del store y las funciones del controlador
@@ -25,16 +23,16 @@ const dni = ref('')
 const snackbar = ref(false)
 
 const text = ref('')
-const showDialog = ref(false)
-
 const showMessage = ref(false)
 const password = ref('')
 
 function fnreset() {
-  clearPers()
-  clearUser()
+  console.log('Reset')
+  reset()
   showMessage.value = false
   dni.value = ''
+
+  console.log(pers.value, user.value)
 }
 
 async function fnverify() {
@@ -47,7 +45,7 @@ async function fnverify() {
 
   console.log(isValid.value, isRegistred.value)
 
-  console.log(perso.value)
+  console.log(pers.value)
   console.log(user.value)
 }
 
@@ -55,12 +53,13 @@ function fnlogin() {
   console.log(user.value?.PASSWORD)
   if (user.value?.PASSWORD === password.value) {
     console.log('A boletas')
-    router.push('boletas')
+    router.push('/boletas')
   }
 }
 
 function handleRegister() {
-  router.push('register')
+  console.log('a Registro')
+  router.push('/register')
 }
 
 const rules = [
@@ -77,6 +76,7 @@ const passwordRules = [
 
 const submitBtn = ref()
 const submit = () => submitBtn.value.click()
+
 </script>
 
 <template>
@@ -89,43 +89,30 @@ const submit = () => submitBtn.value.click()
           </v-card-title>
           <v-card-text>
             <v-form ref="form" @submit.prevent="fnverify">
-              <v-text-field
-                v-model="dni"
-                :rules="rules"
-                type="number"
-                label="DNI"
-                required
-              ></v-text-field>
+              <v-text-field v-model="dni" :rules="rules" type="number" label="DNI" required></v-text-field>
+              <v-text-field :disabled="!isRegistred" class="mt-5" v-model="password" :rules="passwordRules"
+                label="Password" type="password" required></v-text-field>
             </v-form>
             <span v-if="loading">Verificando...</span>
             <!-- <span v-else-if="error">Ocurrio un error en la verificación</span> -->
 
             <div>
               <div class="mt-5">
-                <span v-if="isValid"> El DNI corresponde a un empleado del municipio. </span>
-                <span v-else> El DNI NO corresponde a un empleado del municipio. </span>
+                <span v-if="pers && isValid"> El DNI corresponde a un empleado del municipio. </span>
+                <span v-else-if="pers"> El DNI NO corresponde a un empleado del municipio. </span>
+                <span v-else>Debe ingresar su DNI para la verificación.</span>
               </div>
 
-              <div class="mt-5" v-if="showMessage && isValid">
+              <div class="mt-5" v-if="user">
                 <div v-if="isRegistred">
                   <span>El DNI está registrado como usuario.</span>
-
-                  <v-text-field
-                    class="mt-5"
-                    v-model="password"
-                    :rules="passwordRules"
-                    label="Password"
-                    type="password"
-                    required
-                  ></v-text-field>
                 </div>
-
-                <div v-else>
-                  <span>No se encuentra registrado como usuario. ¿Desea hacerlo? </span>
-                  <div class="d-flex justify-space-evenly mt-5">
-                    <v-btn color="primary" @click = "handleRegister" >Si</v-btn>
-                    <v-btn @click="fnreset" color="primary">No</v-btn>
-                  </div>
+              </div>
+              <div v-if="pers && !isRegistred ">
+                <span>No se encuentra registrado como usuario. ¿Desea hacerlo? </span>
+                <div class="d-flex justify-space-evenly mt-5">
+                  <v-btn color="primary" @click="handleRegister">Si</v-btn>
+                  <v-btn @click="fnreset" color="primary">No</v-btn>
                 </div>
               </div>
             </div>
@@ -133,13 +120,16 @@ const submit = () => submitBtn.value.click()
           <v-card-actions>
             <v-btn color="primary" @click="fnreset">Cancelar</v-btn>
             <v-spacer></v-spacer>
-            <v-btn v-if="!isValid" color="primary" @click="fnverify">Verificar</v-btn>
+            <v-btn v-if="!pers" color="primary" @click="fnverify">Verificar</v-btn>
             <button ref="submitBtn" type="submit" class="d-none">Submit</button>
 
-            <v-btn v-if="isValid" color="primary" @click="fnlogin">Ingresar</v-btn>
+            <v-btn v-if="pers && isValid" color="primary" @click="fnlogin">Ingresar</v-btn>
           </v-card-actions>
         </v-card>
       </v-col>
+    </v-row>
+    <v-row>
+      <div>{{ pers }} - {{ user }}</div>
     </v-row>
   </v-container>
 

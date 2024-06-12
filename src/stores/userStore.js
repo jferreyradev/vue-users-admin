@@ -7,7 +7,7 @@ const { baseUrl, getUserEndpoint, getPersEndpoint } = useApiConfig()
 export const useUserStore = defineStore('user', {
   state: () => ({
     user: null, // Estado inicial del usuario
-    perso: null,
+    pers: null,
     loading: false,
     error: null,
     success: false,
@@ -16,7 +16,7 @@ export const useUserStore = defineStore('user', {
   getters: {
     isRegistred: (state) => !!state.user,
     isAuthenticated: (state) => !!state.auth,
-    isValid: (state) => !!state.perso,
+    isValid: (state) => !!state.pers,
     userName: (state) => state.user?.name || ''
   },
   actions: {
@@ -43,7 +43,7 @@ export const useUserStore = defineStore('user', {
     },
 
     setPers(pers) {
-      this.perso = pers
+      this.pers = pers
       this.success = true
     },
     setUser(user) {
@@ -72,8 +72,10 @@ export const useUserStore = defineStore('user', {
           throw new Error('Error fetching user')
         }
         const data = await response.json()
-        this.perso = data[0]
+        this.pers = data[0]
         this.success = true
+        console.log('------ Persona')
+        console.log(this.pers)
       } catch (error) {
         this.error = error.message
         console.log(error.message)

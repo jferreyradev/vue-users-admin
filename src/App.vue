@@ -7,25 +7,24 @@ import { useUser } from '@/composables/useUser'
 const router = useRouter()
 const { setDesa } = useUrls()
 
-const {reset} = useUser()
+const { reset } = useUser()
 
 function HandleGetOut() {
-  reset()
+  console.log('Salir')
   router.push('/')
+  reset()
 }
 
 onMounted(() => {
   setDesa()
 })
 
-
-
 </script>
 
-<template>  
+<template>
 
   <v-layout>
-    <v-app-bar color="teal-darken-4"> 
+    <v-app-bar color="teal-darken-4">
       <!-- image="https://picsum.photos/1920/1080?random"> -->
       <template v-slot:image>
         <v-img gradient="to top right, rgba(19,84,122,.8), rgba(128,208,199,.8)"></v-img>
@@ -45,7 +44,7 @@ onMounted(() => {
       </v-container>
     </v-main>
     <v-footer name="footer" app>
-      <v-btn class="mx-auto" variant="text" > Get data </v-btn>
+      <v-btn class="mx-auto" variant="text"> Get data </v-btn>
     </v-footer>
   </v-layout>
 
