@@ -128,9 +128,7 @@ const submit = () => submitBtn.value.click()
         </v-card>
       </v-col>
     </v-row>
-    <v-row>
-      <div>{{ pers }} - {{ user }}</div>
-    </v-row>
+   
   </v-container>
 
   <div>

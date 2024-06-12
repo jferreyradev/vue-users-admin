@@ -82,10 +82,10 @@ function handleConforme(item) {
             <th class="text-left">Descripcion</th>
             <th class="text-left">Nro. Adicional</th>
             <th class="text-left">Neto</th>
-            <!--  <th>
-                Conformada
-              </th> -->
-            <th class="text-left">link descarga</th>
+            <th>
+                Conformidad
+            </th> 
+            <th class="text-left">Enlace de descarga</th>
           </tr>
         </thead>
         <tbody>
@@ -95,16 +95,19 @@ function handleConforme(item) {
             <td>{{ item.TIPOLIQUIDACIONDESCRIPCION }}</td>
             <td>{{ item.GRUPOADICIONALID }}</td>
             <td>{{ getNumberFormat(item.NETO) }}</td>
-            <td>
+            <td >
                 <div v-if="item.ESTADO === 1">
                   <h4>Conforme</h4>
                 </div>
                 <div v-else>                  
-                  <v-btn color="primary" block class="m-5" @click="handleConforme(item)">Conformar</v-btn>
+                  <v-btn disabled="tre" color="primary" block class="m-5" @click="handleConforme(item)">Conformar</v-btn>
                 </div>
               </td>
             <td>
-              <a :href="URL_API + '/boleta?IdLiq=' + item.LIQUIDACIONID">descargar</a>
+              
+                <a :href="URL_API + '/boleta?IdLiq=' + item.LIQUIDACIONID" >
+                  <v-btn  block class="m-5"> Descargar </v-btn>
+                </a>
             </td>
           </tr>
         </tbody>
