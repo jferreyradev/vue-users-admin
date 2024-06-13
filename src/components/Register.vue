@@ -42,6 +42,7 @@ async function login() {
 
     try {
         await register(body)
+        reset()
         router.push('/')
     } catch (error) {
         console.log(error)
@@ -71,7 +72,7 @@ const submit = () => submitBtn.value.click();
 
 function handleBack() {
     console.log('back')
-    reset
+    reset()
     router.push('/')
 }
 
