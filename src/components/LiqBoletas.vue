@@ -4,7 +4,7 @@ import { useUser } from '@/composables/useUser.js'
 import { onMounted, ref } from 'vue';
 import { useApiConfig } from '@/composables/useConfigApi'
 
-const { getBaseEndPoint } = useApiConfig()
+const { baseUrl } = useApiConfig()
 
 const { pers, user } =  useUser()
 
@@ -12,15 +12,16 @@ const { pers, user } =  useUser()
 
 const URL_API = 'https://midliq-api-7g0abd0mn8x4.deno.dev/api'
 
+
 const data = ref('')
 const isPending = ref('')
 const error = ref('')
 
-console.log(`${URL_API}/view/boletas?Documento=${user.value?.DNI}`)
+//console.log(`${URL_API}/view/boletas?Documento=${user.value?.DNI}`)
 
 function getData() {
 
-    fetch(`${getBaseEndPoint.value}/boletas/${user.value?.DNI}`)
+    fetch(`${baseUrl.value}/boletas/${user.value?.DNI}`)
       .then((res) => res.json())
       .then((_data) => {
         data.value = _data
