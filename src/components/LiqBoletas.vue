@@ -1,18 +1,14 @@
 <script setup>
-//import { useFilterStore } from '@/stores/filterStore.js'
-//import { useFetch } from '@/composables/useFetch.js'
+
 import { useUser } from '@/composables/useUser.js'
-
 import { onMounted, ref } from 'vue';
-//import { useStatefulComposable } from '@/composables/stateful.js'
-//import { defineProps } from 'vue'
+import { useApiConfig } from '@/composables/useConfigApi'
 
-//const { globalState } = useStatefulComposable()
-
-//const props = defineProps(['dni'])
-
+const { getBaseEndPoint } = useApiConfig()
 
 const { pers, user } =  useUser()
+
+//const URL_API = 'https://midliq-api-mkre08nv6x2j.deno.dev'
 
 const URL_API = 'https://midliq-api-7g0abd0mn8x4.deno.dev/api'
 
@@ -20,9 +16,11 @@ const data = ref('')
 const isPending = ref('')
 const error = ref('')
 
+console.log(`${URL_API}/view/boletas?Documento=${user.value?.DNI}`)
+
 function getData() {
 
-    fetch(`${URL_API}/view/boletas?Documento=${user.value?.DNI}`)
+    fetch(`${getBaseEndPoint.value}/boletas/${user.value?.DNI}`)
       .then((res) => res.json())
       .then((_data) => {
         data.value = _data
@@ -100,7 +98,7 @@ function handleConforme(item) {
                   <h4>Conforme</h4>
                 </div>
                 <div v-else>                  
-                  <v-btn disabled="tre" color="primary" block class="m-5" @click="handleConforme(item)">Conformar</v-btn>
+                  <v-btn color="primary" block class="m-5" @click="handleConforme(item)">Conformar</v-btn>
                 </div>
               </td>
             <td>
