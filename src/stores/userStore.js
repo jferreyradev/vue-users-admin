@@ -107,7 +107,7 @@ export const useUserStore = defineStore('user', {
         //const data = await response.json()
         //data.value = {status:'OK'}
         //this.perso = data[0]
-        this.logged = true
+        //this.logged = true
       } catch (err) {
         this.error = err
         console.log(err)
