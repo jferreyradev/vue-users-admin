@@ -1,12 +1,14 @@
 <script setup>
-
 import { useUser } from '@/composables/useUser.js'
 import { onMounted, ref } from 'vue';
 import { useApiConfig } from '@/composables/useConfigApi'
+import { useBoletasStore } from '@/stores/boletasStore'
+
+const boletasStore = useBoletasStore()
 
 const { baseUrl } = useApiConfig()
 
-const { pers, user } =  useUser()
+const { pers, user } = useUser()
 
 //const URL_API = 'https://midliq-api-mkre08nv6x2j.deno.dev'
 
@@ -21,16 +23,16 @@ const error = ref('')
 
 function getData() {
 
-    fetch(`${baseUrl.value}/boletas/${user.value?.DNI}`)
-      .then((res) => res.json())
-      .then((_data) => {
-        data.value = _data
-        isPending.value = false
-      })
-      .catch((err) => {
-        error.value = err
-        isPending.value = false
-      })
+  fetch(`${baseUrl.value}/boletas/${user.value?.DNI}`)
+    .then((res) => res.json())
+    .then((_data) => {
+      data.value = _data
+      isPending.value = false
+    })
+    .catch((err) => {
+      error.value = err
+      isPending.value = false
+    })
 
 }
 
@@ -42,7 +44,7 @@ const getVto = (vto) => {
   return null
 }
 
-onMounted(()=>{
+onMounted(() => {
   if (pers && user.value.DNI)
     getData()
 })
@@ -51,10 +53,34 @@ function getNumberFormat(n) {
   return Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(n)
 }
 
-function handleConforme(item) {
-    console.log(item)
+async function handleConforme(item) {
+  console.log('Conforme')
+  console.log(item.LIQUIDACIONID)
+  const body = {
+    'IdLiq': item.LIQUIDACIONID,
+    'IdEstado': 1
+  }
+  try {
+    await boletasStore.setBoleta(body)
+    item.ESTADO = 1
+  } catch (error) {
+    console.log(error)
+  }
 }
-
+async function handleNoConforme(item) {
+  console.log('No conforme')
+  console.log(item.LIQUIDACIONID)
+  const body = {
+    'IdLiq': item.LIQUIDACIONID,
+    'IdEstado': 2
+  }
+  try {
+    await boletasStore.setBoleta(body)
+    item.ESTADO = 2
+  } catch (error) {
+    console.log(error)
+  }
+}
 </script>
 
 <template>
@@ -82,8 +108,8 @@ function handleConforme(item) {
             <th class="text-left">Nro. Adicional</th>
             <th class="text-left">Neto</th>
             <th>
-                Conformidad
-            </th> 
+              Conformidad
+            </th>
             <th class="text-left">Enlace de descarga</th>
           </tr>
         </thead>
@@ -94,19 +120,26 @@ function handleConforme(item) {
             <td>{{ item.TIPOLIQUIDACIONDESCRIPCION }}</td>
             <td>{{ item.GRUPOADICIONALID }}</td>
             <td>{{ getNumberFormat(item.NETO) }}</td>
-            <td >
-                <div v-if="item.ESTADO === 1">
-                  <h4>Conforme</h4>
-                </div>
-                <div v-else>                  
-                  <v-btn color="primary" block class="m-5" @click="handleConforme(item)">Conformar</v-btn>
-                </div>
-              </td>
             <td>
-              
-                <a :href="URL_API + '/boleta?IdLiq=' + item.LIQUIDACIONID" >
-                  <v-btn  block class="m-5"> Descargar </v-btn>
-                </a>
+              <div v-if="item.ESTADO === 0">
+                <h4>Indefinido</h4>
+                
+                <div>
+                  <v-btn size="x-small" color="primary" class="m-5" @click="handleConforme(item)">Conforme</v-btn>
+                  <v-btn size="x-small" color="primary" class="m-5" @click="handleNoConforme(item)">Disconforme</v-btn>
+                </div>
+              </div>
+              <div v-else-if="item.ESTADO === 1">
+                <h4>Conforme</h4>
+              </div>
+              <div v-else>
+                <h4>No Conforme</h4>
+              </div>
+            </td>
+            <td>
+              <a :href="URL_API + '/boleta?IdLiq=' + item.LIQUIDACIONID">
+                <v-btn block class="m-5"> Descargar </v-btn>
+              </a>
             </td>
           </tr>
         </tbody>
