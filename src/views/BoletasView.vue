@@ -1,10 +1,11 @@
 <script setup>
-import LiqBoletas from '@/components/LiqBoletas.vue';
-
+//import LiqBoletas from '@/components/LiqBoletas.vue';
+import BoletasList from '@/components/BoletasList.vue';
 </script>
 
 <template>
   <main>
-    <LiqBoletas /> 
+    <BoletasList />
+    <!-- <LiqBoletas />  -->
   </main>
 </template>

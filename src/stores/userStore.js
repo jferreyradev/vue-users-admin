@@ -17,9 +17,17 @@ export const useUserStore = defineStore('user', {
     isRegistred: (state) => !!state.user,
     isAuthenticated: (state) => !!state.auth,
     isValid: (state) => !!state.pers,
-    userName: (state) => state.user?.name || ''
+    userName: (state) => state.user?.name || '',
+    checkPassword(state) {
+      console.log(state.user.PASSWORD)
+      return (pass) => state.user?.PASSWORD || '' === pass
+    },
   },
   actions: {
+    async login(dni, pass){
+      await this.fetchUser(dni)
+      if (this.user?.PASSWORD === pass) this.auth= true
+    },
     async fetchUser(dni) {
       this.loading = true
       this.error = null
@@ -52,11 +60,11 @@ export const useUserStore = defineStore('user', {
     },
     clearUser() {
       this.user = null
-      this.success = false
+      this.success = true
     },
     clearPers() {
       this.pers = null
-      this.success = false
+      this.success = true
     },
 
     async fetchPers(dni) {

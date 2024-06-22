@@ -1,7 +1,7 @@
 <script setup>
-import LoginDNI from '@/components/LoginDNI.vue';
+import Login from '@/components/Login.vue';
 </script>
 
 <template>
-    <LoginDNI />
+    <Login/>
 </template>
