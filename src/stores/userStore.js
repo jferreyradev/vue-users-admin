@@ -11,7 +11,8 @@ export const useUserStore = defineStore('user', {
     loading: false,
     error: null,
     success: false,
-    auth: false
+    auth: false,
+    allowSign : false
   }),
   getters: {
     isRegistred: (state) => !!state.user,
@@ -26,13 +27,24 @@ export const useUserStore = defineStore('user', {
   actions: {
     async login(dni, pass){
       await this.fetchUser(dni)
-      if (this.user?.PASSWORD === pass) this.auth= true
+      if (this.user?.PASSWORD === pass) this.auth = true
+    },
+    async verifyRegister(dni,orden){
+      await this.fetchUser(dni)
+      if (!this.user){
+        await this.fetchPersCargo(dni)
+        if ( this.pers?.ORDEN ==  orden) this.allowSign = true 
+      }
+    },
+    async getData(dni){
+      this.fetchUser(dni)
     },
     async fetchUser(dni) {
       this.loading = true
       this.error = null
       this.success = false
-
+      this.user=null
+      this.auth=false
       try {
         console.log('try user', dni, `${baseUrl.value}/user/${dni}`)
 
@@ -71,10 +83,39 @@ export const useUserStore = defineStore('user', {
       this.loading = true
       this.error = null
       this.success = false
+      this.pers = null
+      this.allowSign = false
       try {
         console.log('try pers', dni, `${baseUrl.value}/persona/${dni}`)
 
         const response = await fetch(`${baseUrl.value}/persona/${dni}`)
+
+        if (!response.ok) {
+          throw new Error('Error fetching user')
+        }
+        const data = await response.json()
+        this.pers = data[0]
+        this.success = true
+        console.log('------ Persona')
+        console.log(this.pers)
+      } catch (error) {
+        this.error = error.message
+        console.log(error.message)
+      } finally {
+        this.loading = false
+      }
+    },
+
+    async fetchPersCargo(dni) {
+      this.loading = true
+      this.error = null
+      this.success = false
+      this.pers=null
+      this.allowSign=false
+      try {
+        console.log('try pers', dni, `${baseUrl.value}/personacargo/${dni}`)
+
+        const response = await fetch(`${baseUrl.value}/personacargo/${dni}`)
 
         if (!response.ok) {
           throw new Error('Error fetching user')
