@@ -12,8 +12,6 @@ const router = useRouter()
 const user = useUserStore()
 const { loading, error, success, auth } = storeToRefs(user)
 
-
-
 const userdni = ref('')
 const password = ref('')
 const attempts = ref(0)
@@ -21,16 +19,26 @@ const attempts = ref(0)
 const dialog = ref(false)
 const text = ref('')
 
+const visiblepass = ref(false)
+
+const dnirules = [
+    value => {
+        if (value?.length > 6 && /[0-9]+/.test(value)) return true
+        return 'El DNI debe tener al menos 7 digitos'
+    }
+]
+
 const login = async () => {
     await user.login(userdni.value, password.value)
     attempts.value++
     if (!auth.value) {
         text.value = 'El DNI o la contraseña ingresada es incorrecta.'
         dialog.value = true
+    } else {
+        await boletas.fetchBoletas(userdni.value)
+        router.push('boletas')
     }
-    console.log(auth.value)
-    await boletas.fetchBoletas(userdni.value)
-    router.push('boletas')
+
 }
 
 function handleNewUser() {
@@ -47,10 +55,12 @@ function handleNewUser() {
         <v-card-text>
             <form ref="form" @submit.prevent="login()">
                 <v-text-field v-model="userdni" name="userdni" label="DNI" type="number" placeholder="Nro. de DNI"
-                    required></v-text-field>
+                    required :rules="dnirules"></v-text-field>
 
-                <v-text-field v-model="password" name="password" label="Contraseña" type="password"
-                    placeholder="Contraseña" required></v-text-field>
+                <v-text-field v-model="password" name="password" label="Contraseña" placeholder="Contraseña" required
+                    :append-inner-icon="visiblepass ? 'mdi-eye-off' : 'mdi-eye'"
+                    :type="visiblepass ? 'text' : 'password'"
+                    @click:append-inner="visiblepass = !visiblepassre"></v-text-field>
                 <v-btn type="submit" class="mt-4" color="primary" value="log in">Login</v-btn>
             </form>
         </v-card-text>

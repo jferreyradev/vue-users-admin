@@ -27,7 +27,9 @@ export const useUserStore = defineStore('user', {
   actions: {
     async login(dni, pass){
       await this.fetchUser(dni)
-      if (this.user?.PASSWORD === pass) this.auth = true
+      if(this.user){
+        if (atob(this.user?.PASSWORD) === pass) this.auth = true
+      }
     },
     async verifyRegister(dni,orden){
       await this.fetchUser(dni)
@@ -136,6 +138,7 @@ export const useUserStore = defineStore('user', {
     async register(bodyIn) {
       this.loading = true
       this.error = null
+      bodyIn.Clave= btoa(bodyIn.Clave)
       console.log(bodyIn)
       try {
         const requestOptions = {
