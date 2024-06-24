@@ -52,7 +52,7 @@ async function handleNoConforme(item) {
 </script>
 
 <template>
-    <v-card class="elevation-12">
+    <v-card class="elevation-12 mx-auto" max-width="900">
         <v-toolbar dark color="primary">
             <v-toolbar-title class="ma-5">Boletas disponibles</v-toolbar-title>
             <v-card-subtitle>

@@ -28,6 +28,8 @@ const textConfirm = ref('')
 const visiblepass = ref(false)
 const visiblepassre = ref(false)
 
+const overlay = ref(false)
+
 const rules = {
     number: [
         value => {
@@ -70,7 +72,9 @@ const rules = {
 
 const signup = async () => {
     if (password.value === repassword.value) {
+        overlay.value=true
         await userStore.verifyRegister(userdni.value, orden.value)
+        overlay.value=false
         attempts.value++
         if (!allowSign.value) {
             if (!user.value) {
@@ -104,7 +108,9 @@ async function handleConfirm() {
 
     try {
         dialogConfirm.value = false
+        overlay.value=true
         await userStore.register(body)
+        overlay.value=false
         text.value = 'El usuario fue registrado exitosamente.\n Ahora sera dirigido a la pantalla de acceso para ingresar.'
         dialog.value = true
         userStore.$reset()
@@ -117,7 +123,7 @@ async function handleConfirm() {
 </script>
 
 <template>
-    <v-card class="elevation-12">
+    <v-card class="elevation-12 mx-auto" max-width="344">
         <v-toolbar dark color="primary">
             <v-toolbar-title class="ma-5">Registro de usuario para consultas de boletas</v-toolbar-title>
         </v-toolbar>
@@ -164,5 +170,18 @@ async function handleConfirm() {
             </template>
         </v-card>
     </v-dialog>
+
+    <v-overlay
+      :model-value="overlay"
+      persistent
+      class="align-center justify-center"
+    >
+      <v-progress-circular
+        color="primary"
+        size="64"
+        indeterminate
+        :active="loading"
+      ></v-progress-circular>
+    </v-overlay>
 
 </template>

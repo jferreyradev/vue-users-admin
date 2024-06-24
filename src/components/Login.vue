@@ -20,6 +20,7 @@ const dialog = ref(false)
 const text = ref('')
 
 const visiblepass = ref(false)
+const overlay = ref(false)
 
 const dnirules = [
     value => {
@@ -29,15 +30,20 @@ const dnirules = [
 ]
 
 const login = async () => {
+    overlay.value=true
     await user.login(userdni.value, password.value)
+    overlay.value=false
     attempts.value++
     if (!auth.value) {
         text.value = 'El DNI o la contraseña ingresada es incorrecta.'
         dialog.value = true
     } else {
+        overlay.value=true
         await boletas.fetchBoletas(userdni.value)
+        overlay.value=false
         router.push('boletas')
     }
+
 
 }
 
@@ -47,7 +53,7 @@ function handleNewUser() {
 </script>
 
 <template>
-    <v-card class="elevation-12">
+    <v-card class="elevation-12 mx-auto" max-width="344">
         <v-toolbar dark color="primary">
             <v-toolbar-title class="ma-5">Ingreso a boletas del empleado</v-toolbar-title>
         </v-toolbar>
@@ -60,7 +66,7 @@ function handleNewUser() {
                 <v-text-field v-model="password" name="password" label="Contraseña" placeholder="Contraseña" required
                     :append-inner-icon="visiblepass ? 'mdi-eye-off' : 'mdi-eye'"
                     :type="visiblepass ? 'text' : 'password'"
-                    @click:append-inner="visiblepass = !visiblepassre"></v-text-field>
+                    @click:append-inner="visiblepass = !visiblepass"></v-text-field>
                 <v-btn type="submit" class="mt-4" color="primary" value="log in">Login</v-btn>
             </form>
         </v-card-text>
@@ -76,5 +82,19 @@ function handleNewUser() {
             </template>
         </v-card>
     </v-dialog>
+
+    <v-overlay
+      :model-value="overlay"
+      persistent
+      class="align-center justify-center"
+    >
+      <v-progress-circular
+        color="primary"
+        size="64"
+        indeterminate
+        :active="loading"
+      ></v-progress-circular>
+    </v-overlay>
+
 
 </template>
