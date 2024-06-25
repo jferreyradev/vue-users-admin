@@ -6,7 +6,8 @@ const boletasStore = useBoletasStore()
 
 const { loading, error, success, boletas } = storeToRefs(boletasStore)
 
-const URL_API = 'https://midliq-api-7g0abd0mn8x4.deno.dev/api'
+//const URL_API = 'https://midliq-api-7g0abd0mn8x4.deno.dev/api'
+const URL_API = 'https://api-bol-pdf.deno.dev/api'
 
 const getVto = (vto) => {
     if (vto) {
