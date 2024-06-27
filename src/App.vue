@@ -32,6 +32,17 @@ onMounted(() => {
       <v-app-bar-title >Boletas - Municipalidad de Concepción</v-app-bar-title>
 
       <v-spacer></v-spacer>
+      <v-menu >
+            <template v-slot:activator="{ props }">
+              <v-btn icon="mdi-dots-vertical" v-bind="props"></v-btn>
+            </template>
+
+            <v-list>
+              <v-list-item title="Perfil" @click="()=>console.log('Perfil')"/>
+              <v-list-item title="Cambio de contraseña" @click="()=>console.log('Cambio de contraseña')"/>
+              <v-list-item title="Salir" @click="()=>console.log('Salir')" />
+            </v-list>
+          </v-menu>
       <v-btn class="bg-blue-darken-2" @click="handleLogout" v-show="auth"> Salir </v-btn>
     </v-app-bar>
     <v-main>
