@@ -60,10 +60,10 @@ function handleNewUser() {
         <v-progress-linear color="primary" height="6" indeterminate rounded :active="loading"></v-progress-linear>
         <v-card-text>
             <form ref="form" @submit.prevent="login()">
-                <v-text-field v-model="userdni" name="userdni" label="DNI" type="number" placeholder="Nro. de DNI"
+                <v-text-field v-model.trim="userdni" name="userdni" label="DNI" type="number" placeholder="Nro. de DNI"
                     required :rules="dnirules"></v-text-field>
 
-                <v-text-field v-model="password" name="password" label="Contraseña" placeholder="Contraseña" required
+                <v-text-field v-model.trim="password" name="password" label="Contraseña" placeholder="Contraseña" required
                     :append-inner-icon="visiblepass ? 'mdi-eye-off' : 'mdi-eye'"
                     :type="visiblepass ? 'text' : 'password'"
                     @click:append-inner="visiblepass = !visiblepass"></v-text-field>

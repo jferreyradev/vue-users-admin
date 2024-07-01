@@ -185,9 +185,11 @@ export const useUserStore = defineStore('user', {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(bodyIn)
         }
-        const res = await fetch(`${baseUrl.value}/claveUsuario`, requestOptions)
-        console.log(res)
-        this.result = res
+        //const res = 
+        await fetch(`${baseUrl.value}/claveUsuario`, requestOptions)
+        //const res = await fetch(`http://localhost:8000/claveUsuario`, requestOptions)
+        //const result =  await res.json()        
+        this.result = 'ok'
       } catch (err) {
         this.error = err
         console.log(err)
