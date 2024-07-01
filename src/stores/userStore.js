@@ -9,10 +9,11 @@ export const useUserStore = defineStore('user', {
     user: null, // Estado inicial del usuario
     pers: null,
     loading: false,
+    result: '',
     error: null,
     success: false,
     auth: false,
-    allowSign : false
+    allowSign: false
   }),
   getters: {
     isRegistred: (state) => !!state.user,
@@ -20,33 +21,32 @@ export const useUserStore = defineStore('user', {
     isValid: (state) => !!state.pers,
     userName: (state) => state.user?.name || '',
     checkPassword(state) {
-      console.log(state.user.PASSWORD)
-      return (pass) => state.user?.PASSWORD || '' === pass
+      return (pass) => (atob(state.user?.PASSWORD) || '') === pass
     },
   },
   actions: {
-    async login(dni, pass){
+    async login(dni, pass) {
       await this.fetchUser(dni)
-      if(this.user){
+      if (this.user) {
         if (atob(this.user?.PASSWORD) === pass) this.auth = true
       }
     },
-    async verifyRegister(dni,orden){
+    async verifyRegister(dni, orden) {
       await this.fetchUser(dni)
-      if (!this.user){
+      if (!this.user) {
         await this.fetchPersCargo(dni)
-        if ( this.pers?.ORDEN ==  orden) this.allowSign = true 
+        if (this.pers?.ORDEN == orden) this.allowSign = true
       }
     },
-    async getData(dni){
+    async getData(dni) {
       this.fetchUser(dni)
     },
     async fetchUser(dni) {
       this.loading = true
       this.error = null
       this.success = false
-      this.user=null
-      this.auth=false
+      this.user = null
+      this.auth = false
       try {
         console.log('try user', dni, `${baseUrl.value}/user/${dni}`)
 
@@ -112,8 +112,8 @@ export const useUserStore = defineStore('user', {
       this.loading = true
       this.error = null
       this.success = false
-      this.pers=null
-      this.allowSign=false
+      this.pers = null
+      this.allowSign = false
       try {
         console.log('try pers', dni, `${baseUrl.value}/personacargo/${dni}`)
 
@@ -138,7 +138,7 @@ export const useUserStore = defineStore('user', {
     async register(bodyIn) {
       this.loading = true
       this.error = null
-      bodyIn.Clave= btoa(bodyIn.Clave)
+      bodyIn.Clave = btoa(bodyIn.Clave)
       console.log(bodyIn)
       try {
         const requestOptions = {
@@ -151,7 +151,7 @@ export const useUserStore = defineStore('user', {
         //const response = await fetch(`http://www.serverburru2.duckdns.org:3005/api/sp/nuevoUsuario`,requestOptions);
         //const url_sp = 'https://midliq-api-a4anetp2t24n.deno.dev'
         //const url_sp = 'https://midliq-api-a4anetp2t24n.deno.dev'
-        await fetch(`${baseUrl.value}/user`, requestOptions)        
+        await fetch(`${baseUrl.value}/user`, requestOptions)
         //console.log(response)
         //data.value = await response.json();
         //userStore.setUser(data[0]);
@@ -161,6 +161,33 @@ export const useUserStore = defineStore('user', {
         //data.value = {status:'OK'}
         //this.perso = data[0]
         //this.logged = true
+      } catch (err) {
+        this.error = err
+        console.log(err)
+      } finally {
+        this.loading = false
+      }
+    },
+
+    async changePassword(newPass) {
+      this.loading = true
+      this.error = null
+
+      console.log(this.user.ID, newPass)
+      try {
+        const bodyIn = {
+          'IdUsuario': this.user.ID,
+          'Clave': btoa(newPass)
+        }
+        const requestOptions = {
+          method: `POST`, // POST, etc
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(bodyIn)
+        }
+        const res = await fetch(`${baseUrl.value}/claveUsuario`, requestOptions)
+        console.log(res)
+        this.result = res
       } catch (err) {
         this.error = err
         console.log(err)
