@@ -2,8 +2,8 @@
 import { ref, computed } from 'vue';
 
 export function useApiConfig() {
-  //const baseUrl = ref('https://api-boletas.deno.dev')
-  const baseUrl = ref('https://api-boletas-6y92xv364y6e.deno.dev')
+  const baseUrl = ref('https://api-boletas.deno.dev')
+  //const baseUrl = ref('https://api-boletas-6y92xv364y6e.deno.dev')
   //const baseUrlSp = 'https://midliq-api-we3b884fccey.deno.dev'
   //const baseUrl = ref('https://www.serverburru2.duckdns.org:3005/api');
   const endpoints = ref({
