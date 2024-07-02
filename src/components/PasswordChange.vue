@@ -8,18 +8,16 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 
 const userStore = useUserStore()
-const { loading, error, success, auth, allowSign, user, result } = storeToRefs(userStore)
+const { loading, result } = storeToRefs(userStore)
 
 const password = ref('')
 const newPassword = ref('')
 const repassword = ref('')
-const attempts = ref(0)
 
 const dialog = ref(false)
 const text = ref('')
 
 const dialogConfirm = ref(false)
-const textConfirm = ref('')
 
 const visiblepass = ref(false)
 const visiblenewpass = ref(false)
@@ -40,7 +38,7 @@ const rules = {
     ]
 }
 
-async function comparePass() {
+async function handlePasswordChange() {
     if (userStore.checkPassword(password.value)) {
         if (userStore.checkPassword(newPassword.value)) {
             text.value = 'No puede usar la misma contraseña que la actual.'
@@ -57,10 +55,12 @@ async function comparePass() {
                 overlay.value = false
                 text.value = 'El cambio de contraseña fue exitoso.\n Ahora sera dirigido a la pantalla de acceso para ingresar.'
                 dialog.value = true
-                userStore.$reset()
-                router.push('/')
+                //userStore.$reset()
+                //router.push('/')
             } catch (error) {
                 console.log(error)
+                text.value = 'Hubo un error en el cmabio de contraseña.'
+                dialog.value = true
             }
         }
     } else {
@@ -69,55 +69,13 @@ async function comparePass() {
     }
 }
 
-const signup = async () => {
-    if (password.value === repassword.value) {
-        overlay.value = true
-        await userStore.verifyRegister(userdni.value, orden.value)
-        console.log(result)
-        overlay.value = false
-        attempts.value++
-        if (!allowSign.value) {
-            if (!user.value) {
-                text.value = 'El DNI o el número de boleta ingresado es incorrecto.'
-                dialog.value = true
-            } else {
-                console.log('El DNI ya se encuentra registrado')
-                text.value = 'El DNI ya se encuentra registrado.'
-                dialog.value = true
-            }
-        } else {
-            textConfirm.value = 'Los datos ingresados fueron verificados y puede continuar.\n ¿Desea registrar el usuario?'
-            dialogConfirm.value = true
-        }
-    } else {
-        text.value = 'Las contraseñas no coinciden. Revise por favor.'
-        dialog.value = true
-    }
-}
-
 async function handleConfirm() {
-    const body = {
-        'DNI': userdni.value,
-        'Usuario': email.value.split('@')[0],
-        'Clave': password.value,
-        'Mail': email.value,
-        'Estado': 1,
-        'Rol': 1,
-        'App': 1
-    }
-
-    try {
-        dialogConfirm.value = false
-        overlay.value = true
-        await userStore.register(body)
-        overlay.value = false
-        text.value = 'El usuario fue registrado exitosamente.\n Ahora sera dirigido a la pantalla de acceso para ingresar.'
-        dialog.value = true
+    dialog.value = false
+    if (result) {
         userStore.$reset()
         router.push('/')
-    } catch (error) {
-        console.log(error)
     }
+
 }
 
 </script>
@@ -129,7 +87,7 @@ async function handleConfirm() {
         </v-toolbar>
         <v-progress-linear color="primary" height="6" indeterminate rounded :active="loading"></v-progress-linear>
         <v-card-text>
-            <form ref="form" @submit.prevent="comparePass()">
+            <form ref="form" @submit.prevent="handlePasswordChange()">
                 <v-text-field v-model="password" name="password" label="Contraseña actual" placeholder="Contraseña"
                     required :rules="rules.password" :append-inner-icon="visiblepass ? 'mdi-eye-off' : 'mdi-eye'"
                     :type="visiblepass ? 'text' : 'password'"
@@ -155,16 +113,7 @@ async function handleConfirm() {
     <v-dialog v-model="dialog" width="auto">
         <v-card max-width="400" prepend-icon="mdi-update" :text="text" title="Información">
             <template v-slot:actions>
-                <v-btn class="ms-auto" text="Ok" @click="dialog = false"></v-btn>
-            </template>
-        </v-card>
-    </v-dialog>
-
-    <v-dialog v-model="dialogConfirm" width="auto">
-        <v-card max-width="400" prepend-icon="mdi-update" :text="textConfirm" title="Confirmación">
-            <template v-slot:actions>
-                <v-btn class="ms-auto" text="Si" @click="handleConfirm"></v-btn>
-                <v-btn class="ms-auto" text="No" @click="dialogConfirm = false"></v-btn>
+                <v-btn class="ms-auto" text="Ok" @click="handleConfirm"></v-btn>
             </template>
         </v-card>
     </v-dialog>
