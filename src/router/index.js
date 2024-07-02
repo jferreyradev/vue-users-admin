@@ -31,19 +31,27 @@ const router = createRouter({
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/BoletasView.vue')
+    },
+    {
+      path: '/passchange',
+      name: 'passchange',
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import('../views/ChangePassword.vue')
     }
   ]
 })
 
-router.beforeEach((to,from, next) => {
+router.beforeEach((to, from, next) => {
 
   const useUser = useUserStore()
   const { auth } = storeToRefs(useUser)
 
-  const publicPages = ['/','/login','/signup']
+  const publicPages = ['/', '/login', '/signup']
   const authRequired = !publicPages.includes(to.path)
-  
-  if (authRequired && !auth.value ) {
+
+  if (authRequired && !auth.value) {
     console.log('To Login')
     return next('/login')
   }

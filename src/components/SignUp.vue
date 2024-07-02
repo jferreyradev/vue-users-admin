@@ -8,9 +8,7 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 
 const userStore = useUserStore()
-const { loading, error, success, auth, allowSign, user } = storeToRefs(userStore)
-
-
+const { loading, allowSign, user } = storeToRefs(userStore)
 
 const userdni = ref('')
 const orden = ref('')
