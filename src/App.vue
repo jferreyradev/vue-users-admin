@@ -1,6 +1,6 @@
 <script setup>
 import { RouterView, useRouter } from 'vue-router'
-import { useUrls } from './composables/useUrls';
+//import { useUrls } from './composables/useUrls';
 import { onMounted } from 'vue';
 import { useUserStore } from '@/stores/userStore';
 import { storeToRefs } from 'pinia';
@@ -9,7 +9,7 @@ const user = useUserStore()
 const { loading, error, success, auth } = storeToRefs(user)
 
 const router = useRouter()
-const { setDesa } = useUrls()
+//const { setDesa } = useUrls()
 
 function handleLogout() {
 
@@ -18,10 +18,11 @@ function handleLogout() {
   router.push('/')
 
 }
-
+/*
 onMounted(() => {
   setDesa()
 })
+  */
 
 </script>
 
@@ -29,7 +30,7 @@ onMounted(() => {
 
   <v-layout class="rounded rounded-md d-flex flex-column mb-6 ">
     <v-app-bar>
-      <v-app-bar-title>Boletas - Municipalidad de Concepción</v-app-bar-title>
+      <v-app-bar-title>Boletas - Municipalidad de Tafí Viejo</v-app-bar-title>
 
       <v-spacer></v-spacer>
       <div v-show="auth">
