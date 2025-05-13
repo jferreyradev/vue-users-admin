@@ -30,7 +30,7 @@ onMounted(() => {
 
   <v-layout class="rounded rounded-md d-flex flex-column mb-6 ">
     <v-app-bar>
-      <v-app-bar-title>Boletas - Municipalidad de Tafí Viejo</v-app-bar-title>
+      <v-app-bar-title>Boletas - Municipalidad de Burruyacu</v-app-bar-title>
 
       <v-spacer></v-spacer>
       <div v-show="auth">
