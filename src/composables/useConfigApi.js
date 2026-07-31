@@ -2,7 +2,7 @@
 import { ref, computed } from 'vue';
 
 export function useApiConfig() {
-  const baseUrl = ref('https://dno-mid-tafiviejo-boletas.deno.dev')
+  const baseUrl = ref('https://dno-mid-boletas.jferreyradev.deno.net')
   const endpoints = ref({
     users: '/users',
     user: '/user',
