@@ -1,6 +1,7 @@
 // stores/userStore.js o stores/userStore.ts
 import { defineStore } from 'pinia'
 import { useApiConfig } from '@/composables/useConfigApi'
+import { getBoletasHeaders } from '@/composables/useConfigApi'
 
 const { baseUrl } = useApiConfig()
 
@@ -50,7 +51,11 @@ export const useUserStore = defineStore('user', {
       try {
         console.log('try user', dni, `${baseUrl.value}/user/${dni}`)
 
-        const response = await fetch(`${baseUrl.value}/user/${dni}`) // Cambia la URL a la de tu API
+        const response = await fetch(`${baseUrl.value}/user/${dni}`,
+          {
+            headers: getBoletasHeaders()
+          }
+        ) // Cambia la URL a la de tu API
         if (!response.ok) {
           throw new Error('Error fetching user')
         }
@@ -88,9 +93,15 @@ export const useUserStore = defineStore('user', {
       this.pers = null
       this.allowSign = false
       try {
-        console.log('try pers', dni, `${baseUrl.value}/persona/${dni}`)
+        console.log('try pers', dni, `${baseUrl.value}/persona/${dni}`,
+          {
+            headers: getBoletasHeaders()
+          }
+        )
 
-        const response = await fetch(`${baseUrl.value}/persona/${dni}`)
+        const response = await fetch(`${baseUrl.value}/persona/${dni}`, {
+            headers: getBoletasHeaders()
+          } )
 
         if (!response.ok) {
           throw new Error('Error fetching user')
@@ -117,7 +128,9 @@ export const useUserStore = defineStore('user', {
       try {
         console.log('try pers', dni, `${baseUrl.value}/personacargo/${dni}`)
 
-        const response = await fetch(`${baseUrl.value}/personacargo/${dni}`)
+        const response = await fetch(`${baseUrl.value}/personacargo/${dni}`, {
+            headers: getBoletasHeaders()
+          }  )
 
         if (!response.ok) {
           throw new Error('Error fetching user')
@@ -144,7 +157,7 @@ export const useUserStore = defineStore('user', {
         const requestOptions = {
           method: `POST`, // POST, etc
           mode: 'no-cors',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', ...getBoletasHeaders() },
           body: JSON.stringify(bodyIn)
         }
         //const response = await fetch(`https://midliq-api-jr2sc3ef7gnx.deno.dev/api/sp/nuevoUsuario`,requestOptions);
@@ -182,7 +195,7 @@ export const useUserStore = defineStore('user', {
         const requestOptions = {
           method: `POST`, // POST, etc
           mode: 'no-cors',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', ...getBoletasHeaders() },
           body: JSON.stringify(bodyIn)
         }
         //const res = 

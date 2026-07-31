@@ -6,7 +6,7 @@ const boletasStore = useBoletasStore()
 
 const { loading, error, success, boletas } = storeToRefs(boletasStore)
 
-const URL_API = 'https://dno-mid-burruyacu.deno.dev/api'
+const URL_API = 'https://dno-mid-api-xz73650wrdg7.jferreyradev.deno.net/api'
 
 const getVto = (vto) => {
     if (vto) {

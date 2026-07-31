@@ -1,8 +1,16 @@
 // composables/useApiConfig.js
 import { ref, computed } from 'vue';
 
+export function getBoletasHeaders() {
+  return {
+    'Content-Type': 'application/json',
+    'x-project-key': 'Burru',
+    'x-project-port': '3003'
+  }
+}
+
 export function useApiConfig() {
-  const baseUrl = ref('https://dno-mid-burruyacu-boletas.deno.dev')
+  const baseUrl = ref('https://dno-mid-boletas.jferreyradev.deno.net')
   const endpoints = ref({
     users: '/users',
     user: '/user',
@@ -33,6 +41,6 @@ export function useApiConfig() {
     getUserEndpoint,
     getPersEndpoint,
     setBaseUrl,
-    setEndpoint,
+    setEndpoint, getBoletasHeaders
   };
 }
