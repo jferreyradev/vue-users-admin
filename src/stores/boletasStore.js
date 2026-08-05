@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { useApiConfig } from '@/composables/useConfigApi'
 
-const { baseUrl } = useApiConfig()
+const { baseUrl, getHeaders } = useApiConfig()
 
 export const useBoletasStore = defineStore('boletas', {
     state: () => ({
@@ -23,7 +23,7 @@ export const useBoletasStore = defineStore('boletas', {
             this.success = false
 
             try {
-                const response = await fetch(`${baseUrl.value}/boletas/${dni}`) // Cambia la URL a la de tu API
+                const response = await fetch(`${baseUrl.value}/boletas/${dni}`, { headers: getHeaders() }) // Cambia la URL a la de tu API
                 if (!response.ok) {
                     throw new Error('Error fetching user')
                 }
@@ -42,9 +42,8 @@ export const useBoletasStore = defineStore('boletas', {
             console.log(bodyIn)
             try {
                 const requestOptions = {
-                    method: `POST`, // POST, etc
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
+                    method: `POST`,
+                    headers: getHeaders(),
                     body: JSON.stringify(bodyIn)
                 }
                 await fetch(`${baseUrl.value}/estadoBoleta`, requestOptions)

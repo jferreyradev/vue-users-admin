@@ -1,13 +1,17 @@
 <script setup>
+import { ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useBoletasStore } from '@/stores/boletasStore';
+import { useApiConfig } from '@/composables/useConfigApi';
 
 const boletasStore = useBoletasStore()
+const { getHeaders } = useApiConfig()
 
-const { loading, error, success, boletas } = storeToRefs(boletasStore)
+const { loading, boletas } = storeToRefs(boletasStore)
+const descargando = ref(new Set())
 
 //const URL_API = 'https://midliq-api-7g0abd0mn8x4.deno.dev/api'
-const URL_API = 'https://dno-mid-api-qt3ngtmrrm1y.jferreyradev.deno.net/api'
+const URL_API = 'https://dno-mid-api-22.jferreyradev.deno.net/api'
 //const URL_API = 'https://api-bol-pdf.deno.dev/api'
 
 const getVto = (vto) => {
@@ -48,6 +52,36 @@ async function handleNoConforme(item) {
         item.ESTADO = 2
     } catch (error) {
         console.log(error)
+    }
+}
+
+async function descargarBoleta(item) {
+    const url = `${URL_API}/boleta?IdLiq=${item.LIQUIDACIONID}`
+    descargando.value = new Set([...descargando.value, item.LIQUIDACIONID])
+    try {
+        const response = await fetch(url, { method: 'GET', headers: getHeaders() })
+        if (!response.ok) throw new Error(`Error ${response.status}: ${response.statusText}`)
+        const blob = await response.blob()
+        const blobUrl = window.URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.href = blobUrl
+        const disposition = response.headers.get('content-disposition')
+        let filename = `boleta_${item.LIQUIDACIONID}.pdf`
+        if (disposition) {
+            const match = disposition.match(/filename="?([^"]+)"?/)
+            if (match?.[1]) filename = match[1]
+        }
+        link.download = filename
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        window.URL.revokeObjectURL(blobUrl)
+    } catch (err) {
+        console.error('Error descargando boleta:', err)
+    } finally {
+        const s = new Set(descargando.value)
+        s.delete(item.LIQUIDACIONID)
+        descargando.value = s
     }
 }
 
@@ -115,9 +149,8 @@ async function handleNoConforme(item) {
                             </div>
                         </td>
                         <td>
-                            <a :href="URL_API + '/boleta?IdLiq=' + item.LIQUIDACIONID">
-                                <v-btn block class="m-5"> Descargar </v-btn>
-                            </a>
+                            <v-btn variant="outlined" block class="m-5" @click="descargarBoleta(item)"
+                                :loading="descargando.has(item.LIQUIDACIONID)"> Descargar </v-btn>
                         </td>
                     </tr>
                 </tbody>

@@ -26,6 +26,12 @@ export function useApiConfig() {
     endpoints.value[key] = endpoint;
   };
 
+  const getHeaders = () => ({
+    'Content-Type': 'application/json',
+    'x-project-key': 'tafiviejo',
+    'x-project-port': '3007'
+  });
+
   return {
     baseUrl,
     getBaseEndPoint,
@@ -34,5 +40,6 @@ export function useApiConfig() {
     getPersEndpoint,
     setBaseUrl,
     setEndpoint,
+    getHeaders,
   };
 }
