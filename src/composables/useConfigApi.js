@@ -1,14 +1,6 @@
 // composables/useApiConfig.js
 import { ref, computed } from 'vue';
 
-export function getBoletasHeaders() {
-  return {
-    'Content-Type': 'application/json',
-    'x-project-key': 'Burru',
-    'x-project-port': '3003'
-  }
-}
-
 export function useApiConfig() {
   const baseUrl = ref('https://dno-mid-boletas.jferreyradev.deno.net')
   const endpoints = ref({
@@ -34,6 +26,20 @@ export function useApiConfig() {
     endpoints.value[key] = endpoint;
   };
 
+  // headers para userStore
+  const getHeaders = () => ({
+    'Content-Type': 'application/json',
+    'x-project-key': 'Burru',
+    'x-project-port': '3003'
+  });
+
+  // headers para boletasStore
+  const getBoletasHeaders = () => ({
+    'Content-Type': 'application/json',
+    'x-project-key': 'Burru',
+    'x-project-port': '3003'
+  });
+
   return {
     baseUrl,
     getBaseEndPoint,
@@ -41,6 +47,8 @@ export function useApiConfig() {
     getUserEndpoint,
     getPersEndpoint,
     setBaseUrl,
-    setEndpoint, getBoletasHeaders
+    setEndpoint,
+    getHeaders,
+    getBoletasHeaders,
   };
 }

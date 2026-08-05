@@ -1,9 +1,7 @@
 import { defineStore } from 'pinia'
 import { useApiConfig } from '@/composables/useConfigApi'
 
-import { getBoletasHeaders } from '@/composables/useConfigApi'
-
-const { baseUrl } = useApiConfig()
+const { baseUrl, getBoletasHeaders } = useApiConfig()
 
 export const useBoletasStore = defineStore('boletas', {
     state: () => ({
@@ -46,11 +44,8 @@ export const useBoletasStore = defineStore('boletas', {
             console.log(bodyIn)
             try {
                 const requestOptions = {
-                    method: `POST`, // POST, etc
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json', 
-                        ...getBoletasHeaders()
-                    },
+                    method: `POST`,
+                    headers: getBoletasHeaders(),
                     body: JSON.stringify(bodyIn)
                 }
                 await fetch(`${baseUrl.value}/estadoBoleta`, requestOptions)
