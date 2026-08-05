@@ -45,11 +45,8 @@ export const useBoletasStore = defineStore('boletas', {
             console.log(bodyIn)
             try {
                 const requestOptions = {
-                    method: `POST`, // POST, etc
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json',
-                        ...getBoletasHeaders()
-                    },
+                    method: `POST`,
+                    headers: getBoletasHeaders(),
                     body: JSON.stringify(bodyIn)
                 }
                 await fetch(`${baseUrl.value}/estadoBoleta`, requestOptions)
